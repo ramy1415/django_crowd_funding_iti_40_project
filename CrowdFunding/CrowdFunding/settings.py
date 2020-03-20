@@ -40,7 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_populate',
 ]
+FAKER_LOCALE = None # settings.LANGUAGE_CODE is loaded
+FAKER_PROVIDERS = None # faker.DEFAULT_PROVIDERS is loaded (all)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
