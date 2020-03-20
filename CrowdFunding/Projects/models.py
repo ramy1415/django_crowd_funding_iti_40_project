@@ -69,6 +69,9 @@ class Rate(models.Model):
         (5, "5")
     )
     rate = models.IntegerField(choices=project_rates, default=1)
+    class Meta:
+        unique_together = ('project_id', 'user_id')
+
     def __str__(self):
         return str(self.user_id) +" : rated : "+ str(self.project_id) +" : "+ str(self.rate)
 
