@@ -4,12 +4,11 @@
 <head>
   <title>Project Details</title>
   {% load static %}
-  <link href='{% static "style\bootstrap\css\bootstrap.css" %}' rel="stylesheet" />
-    <script src='{% static "style\jquery\jquery-3.4.1.min.js" %}'></script>
-    <script src="{% static 'style\bootstrap\js\popper.js' %}"></script>
-    <script src="{% static 'style\bootstrap\js\bootstrap.js' %}"></script>
-    <script src="{% static 'dist\jquery.emojiRatings.js' %}"></script>
-
+  <link href='{% static "style/bootstrap/css/bootstrap.css" %}' rel="stylesheet" />
+    <script src='{% static "style/jquery/jquery-3.4.1.min.js" %}'></script>
+    <script src="{% static 'style/bootstrap/js/popper.js' %}"></script>
+    <script src="{% static 'style/bootstrap/js/bootstrap.js' %}"></script>
+    <link href="{% static 'style/font-awesome.css' %}" rel="stylesheet" />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
@@ -23,6 +22,34 @@
       width: 100%;
       height: 100%;
   }
+#stars-outer {
+  position: relative;
+  display: inline-block;
+}
+
+#stars-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+}
+
+#stars-outer::before {
+  content: "\f005 \f005 \f005 \f005 \f005";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  color: #ccc;
+}
+
+#stars-inner::before {
+  content: "\f005 \f005 \f005 \f005 \f005";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  color: #f8ce0b;
+}
+
   </style>
   <script>
   function updateRate(rate){
@@ -115,16 +142,15 @@
 
                 <div class="carousel-item active" >
                   <img src="{% static '' %}{{pictures.0}}"  alt='Los Angeles'  width="1100" height="500">
-
-
+                </div>
               {% else %}
                 {%for picture in pictures %}
                     {%if picture != pictures.0 %}
                 <div class="carousel-item " >
                   <img src="{% static '' %}{{picture}}"  alt='Los Angeles'  width="1100" height="500">
-               {% endif %}
-                </div>
 
+                </div>
+                {% endif %}
                 {% endfor %}
                 {% endif %}
                 {% endfor %}
@@ -185,23 +211,28 @@
         <!-- Comment with nested comments -->
 
 
-      </fragment>
 
+</div>
       <!-- Sidebar Widgets Column -->
       <div class="col-md-4">
 
-        <!-- Search Widget -->
+        <!-- Rate Widget -->
         <div class="card my-4">
           <h5 class="card-header">Rate</h5>
           <div class="card-body">
-            <div id="rate">
-
-
+            <div >
+                <div class="form-group">
+                    <input type="number" id="rating-control" class="form-control" step="1" min="1" max="5" placeholder="Rate 1 - 5" >
+                </div>
+                <div id="stars-outer">
+                    <div id="stars-inner"></div>
+                </div>
+                    <span class="number-rating"></span>
             </div>
           </div>
         </div>
 
-        <!-- Categories Widget -->
+        <!-- Tags Widget -->
         <div class="card my-4">
           <h5 class="card-header">Tags</h5>
           <div class="card-body">
@@ -217,7 +248,7 @@
               {% endfor %}
         </div>
     </div>
-     </div>   <!-- Side Widget -->
+     </div>   <!-- Category Widget -->
         <div class="card my-4">
           <h5 class="card-header">Category</h5>
           <div class="card-body">
@@ -234,22 +265,49 @@
 
 
 <script>
-  options = {
-	emoji: 'U+2B50',
-	count: 5,
-	fontSize: 16,
-	inputName: 'rating',
-	onUpdate:function(rating) {
-	console.log(rating);
-	updateRate(rating);
-  }
-}
-$('#rate').emojiRating(options);
+
 document.querySelector("#submit").onclick=function(){
    comment=document.getElementsByTagName("textarea")[0].value
    console.log(comment)
    updateComment(comment)
 }
+const starsTotal = 5;
+
+    // Run getRatings when DOM loads
+    document.addEventListener('DOMContentLoaded', function(){getRatings({{rate}})});
+
+    // Form Elements
+    const ratingControl = document.getElementById('rating-control');
+
+    ratingControl.value ={{rate}};
+
+
+function getRatings(ratee) {
+
+        // Get percentage
+        const starPercentage = ( ratee / starsTotal) * 100;
+
+        // Round to nearest 10
+        const starPercentageRounded = `${Math.round(starPercentage / 10) * 10}%`;
+
+        // Set width of stars-inner to percentage
+        document.querySelector(`#stars-inner`).style.width = starPercentageRounded;
+
+        // Add number rating
+        document.querySelector(`.number-rating`).innerHTML = ratee;
+      }
+
+ratingControl.addEventListener('change', (e) => {
+      const rating = e.target.value;
+
+      // Change rating
+
+     getRatings(rating);
+     updateRate(rating);
+
+
+    });
+
 
 </script>
 </body>

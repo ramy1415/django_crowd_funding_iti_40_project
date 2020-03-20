@@ -63,6 +63,9 @@ def project_details(request, _id):
     print(tags)
     donation = project.current_money / project.total_target
     picnum = []
+    rate = Rate.objects.get(project_id=_id,user_id=1)
+    ratenum=int(str(rate).split(":", 4)[3])
+    print(ratenum)
     for i in range(len(pictures)):
         picnum.append(i)
     context = {
@@ -72,6 +75,7 @@ def project_details(request, _id):
         'donationbar': donation,
         'comments': commentsdict,
         'tags': tags,
+        'rate':ratenum,
         # must be get from session
         "user": User.objects.get(id=1)
     }

@@ -32,7 +32,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'Users',
+    'Users.apps.UsersConfig',
+    'six',
+    'crispy_forms',
+    'bootstrapform',
     'Projects.apps.ProjectsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,10 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_populate',
+
 ]
-FAKER_LOCALE = None # settings.LANGUAGE_CODE is loaded
-FAKER_PROVIDERS = None # faker.DEFAULT_PROVIDERS is loaded (all)
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -121,9 +124,11 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'files')
+MEDIA_URL = '/files/'
