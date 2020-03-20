@@ -4,6 +4,8 @@ from .models import Category, Comment, Donation, Project, Picture, Rate, Tag
 from Users.models import User
 from .forms import AddProject
 from django.http import JsonResponse
+from Users.models import Profile
+from django.utils import timezone
 
 
 def add_project(request):
@@ -63,8 +65,8 @@ def project_details(request, _id):
     print(tags)
     donation = project.current_money / project.total_target
     picnum = []
-    rate = Rate.objects.get(project_id=_id,user_id=1)
-    ratenum=int(str(rate).split(":", 4)[3])
+    rate = Rate.objects.get(project_id=_id, user_id=1)
+    ratenum = int(str(rate).split(":", 4)[3])
     print(ratenum)
     for i in range(len(pictures)):
         picnum.append(i)
@@ -75,7 +77,7 @@ def project_details(request, _id):
         'donationbar': donation,
         'comments': commentsdict,
         'tags': tags,
-        'rate':ratenum,
+        'rate': ratenum,
         # must be get from session
         "user": User.objects.get(id=1)
     }
@@ -85,9 +87,9 @@ def project_details(request, _id):
 def project_comment(request):
     if request.is_ajax and request.method == "GET":
         comment = Comment()
-        print("comment",request.GET['comment'])
+        print("comment", request.GET['comment'])
         comment.comment_body = request.GET['comment']
-        comment.project_id =Project.objects.get(id= request.GET['id'])
+        comment.project_id = Project.objects.get(id=request.GET['id'])
         comment.user_id = User.objects.get(id=1)
         comment.save()
 
@@ -108,3 +110,32 @@ def project_rate(request):
             return JsonResponse({"done": "done"})
         else:
             return JsonResponse({"error": "error"})
+
+
+def home_page(request):
+    return render(request, "Projects/home_page.html")
+
+
+def all_projects(request):
+    all_projects = Project.objects.all()
+    all_pictures = Picture.objects.all()
+    all_profiles = Profile.objects.all()
+    all_rates = Rate.objects.all()
+    for i in all_projects:
+        i.pics = [pic.pic_path.url for pic in filter(lambda e: e.project_id_id == i.id, all_pictures)]
+        if len(i.pics) == 0:
+            i.pics = ["/static/images/projects/default_project.jpg"]
+        try:
+            i.user_pic = [pic.profile_pic.url for pic in filter(lambda e: e.user_id == i.user_id_id, all_profiles)][0]
+        except IndexError as identifier:
+            i.user_pic = "/static/images/profiles/default_profile.png"
+        i.remaining = str(i.end_time - timezone.localtime(timezone.now()).date()).split(",")[0]
+        i.progress = (i.current_money / i.total_target) * 100
+        project_rates = [project.rate for project in filter(lambda e: e.project_id_id == i.id, all_rates)]
+        try:
+            i.rate_percentage = ((sum(project_rates) / len(project_rates)) / 5) * 100
+            i.rate = round(((sum(project_rates) / len(project_rates))), 1)
+        except ZeroDivisionError as identifier:
+            i.rate_percentage = 0
+            i.rate = 0
+    return render(request, 'Projects/all_projects.html', {'all_projects': all_projects})
