@@ -37,7 +37,7 @@ def users_register(request):
             user.set_password(user.password)
             #it should be false but for easy testing login after register 
             # i set it true to skip activation and login easly.
-            user.is_active = True 
+            user.is_active = False
             user.save()
 
 
@@ -46,8 +46,8 @@ def users_register(request):
             message = render_to_string('Users/active_email.html', {
                 'user': user,
                 'domain': current_site.domain,
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-                'token':account_activation_token.make_token(user),
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user)
             })
             to_email = user_form.cleaned_data.get('email')
             email = EmailMessage(
@@ -58,7 +58,7 @@ def users_register(request):
             profile.user = user
             if 'profile_pic' in request.FILES:
                 print('found it')
-                profile.profilePic = request.FILES['profile_pic']
+                profile.profile_pic = request.FILES['profile_pic']
             profile.save()
             registered = True
         else:
@@ -95,7 +95,8 @@ def users_login(request):
 
 def activate(request, uidb64, token):
     try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
+        #uid = force_text(urlsafe_base64_decode(uidb64))
+        uid = urlsafe_base64_decode(uidb64).decode()
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
