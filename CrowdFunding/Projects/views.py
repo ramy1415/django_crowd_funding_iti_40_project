@@ -39,7 +39,7 @@ def add_project(request):
                     img.project_id = project
                     img.save()
 
-            return render(request, "Projects/home_page.html")
+            return home_page(request)
     else:
         form = AddProject()
         if 'submitted' in request.GET:
