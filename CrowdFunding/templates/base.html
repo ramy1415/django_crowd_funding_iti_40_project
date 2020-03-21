@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>crowd funding{% block title %}{% endblock %}</title>
+    <link href="{% static "style/fontawesome/css/all.css" %}" rel="stylesheet" />
     <script src="{% static "style/jquery/jquery-3.4.1.min.js" %}"></script>
     <link href="{% static "style/bootstrap/css/bootstrap.css" %}" rel="stylesheet" />
     <script src="{% static "style/bootstrap/js/popper.js" %}"></script>
@@ -12,7 +13,9 @@
      {% block 'additional_includes' %}{% endblock %}
 </head>
 <body>
+
     <div class="container-fluid px-0">
+
 
 
                 {% block content%}{% endblock %}

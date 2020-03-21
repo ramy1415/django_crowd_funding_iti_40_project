@@ -2,5 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+<<<<<<< HEAD
+=======
+    <mapping directory="$PROJECT_DIR$/files/jquery-emoji-ratings" vcs="Git" />
+>>>>>>> 52750c210a034b32c44fab0e7995013f836abccf
   </component>
 </project>

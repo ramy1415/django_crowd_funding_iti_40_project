@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Project</title>
+</head>
+<body>
+{% if submitted %}
+    <p> your project added successfully</p>
+{% else %}
+    <form  method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+           <tr>
+<!--               <td>&nbsp;"  "</td>-->
+<!--               <td>-->
+<!--                   <input type="file" name="projectImages" multiple/>-->
+<!--               </td>-->
+
+           </tr>
+           <tr>
+               <td>&nbsp;</td>
+               <td><input type="submit" value="Submit"></td>
+           </tr>
+       </table>
+
+</form>
+{% endif %}
+</body>
+</html>
