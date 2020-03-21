@@ -42,3 +42,12 @@ class ProfileForm(forms.ModelForm):
          model = Profile
          fields = ('mobile_phone','profile_pic')
 #----------------------------------------------------------------   
+class UpdateUserForm(forms.ModelForm):
+    class Meta():
+        model = User
+        fields = ('username','first_name','last_name')
+
+class UpdateProfileForm(forms.ModelForm):
+    class Meta():
+        model = Profile
+        fields = ('profile_pic','mobile_phone','birth_date','country','fb_profile')
