@@ -65,8 +65,13 @@ def project_details(request, _id):
     print(tags)
     donation = project.current_money / project.total_target
     picnum = []
-    rate = Rate.objects.get(project_id=_id, user_id=1)
-    ratenum = int(str(rate).split(":", 4)[3])
+
+    if Rate.objects.get(project_id=_id, user_id=1):
+        rate = Rate.objects.get(project_id=_id, user_id=1)
+        ratenum = int(str(rate).split(":", 4)[3])
+    else:
+        ratenum = 0
+
     print(ratenum)
     for i in range(len(pictures)):
         picnum.append(i)
@@ -93,7 +98,7 @@ def project_comment(request):
         comment.user_id = User.objects.get(id=1)
         comment.save()
 
-    if comment.save():
+    if comment:
         return JsonResponse({"done": "done"})
     else:
         return JsonResponse({"error": "error"})
@@ -102,11 +107,11 @@ def project_comment(request):
 def project_rate(request):
     if request.is_ajax and request.method == "POST":
 
-        Rate.objects.update_or_create(
+        result = Rate.objects.update_or_create(
             project_id=Project.objects.get(id=request.POST['id']), user_id=User.objects.get(id=1),
             defaults={'rate': request.POST['rate']}, )
 
-        if True:
+        if result:
             return JsonResponse({"done": "done"})
         else:
             return JsonResponse({"error": "error"})
