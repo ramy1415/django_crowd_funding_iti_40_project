@@ -60,7 +60,7 @@
         <entry file="file://$PROJECT_DIR$/templates/partials/nav_bar.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="81">
-              <caret line="3" column="47" lean-forward="true" selection-start-line="3" selection-end-line="4" />
+              <caret line="3" selection-start-line="3" selection-end-line="3" />
             </state>
           </provider>
         </entry>
@@ -424,7 +424,7 @@
     <entry file="file://$PROJECT_DIR$/templates/partials/nav_bar.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="81">
-          <caret line="3" column="47" lean-forward="true" selection-start-line="3" selection-end-line="4" />
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
         </state>
       </provider>
     </entry>

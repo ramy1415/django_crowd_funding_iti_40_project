@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% include 'partials/nav_bar.html' %}
+        {% load static %}
+{% block 'additional_includes' %}
+    <link rel="stylesheet" type="text/css" href="{% static "style/profile.css " %}" />
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+{% endblock %}
+<!--/*Page Content */-->
+<h1>Donations</h1>
+<!--/*End ofPage Content */-->
+{% endblock %}
