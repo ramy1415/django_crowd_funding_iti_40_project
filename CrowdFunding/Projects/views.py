@@ -2,8 +2,8 @@ from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render
 from .models import Category, Comment, Donation, Project, Picture, Rate, Tag
 from Users.models import User
-from .forms import AddProject
-from django.http import JsonResponse
+from .forms import AddProject, EditProject
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponseServerError
 from Users.models import Profile
 from django.utils import timezone
 
@@ -37,7 +37,7 @@ def add_project(request):
                     img.project_id = project
                     img.save()
 
-            return render(request, "Projects/home_page.html")
+            return HttpResponseRedirect('/addproject?submitted=True')
     else:
         form = AddProject()
         if 'submitted' in request.GET:
@@ -46,8 +46,21 @@ def add_project(request):
     return render(request, 'Projects/add_project.html', {'form': form, 'submitted': submitted})
 
 
-def home_page(request):
-    return render(request, "Projects/home_page.html")
+def edit_project(request, _id):
+    submitted = False
+    if request.method == 'POST':
+        project = Project.objects.get(id=_id)
+        edit_form = EditProject(request.POST, instance=project)
+        edit_form.save()
+
+        return HttpResponseRedirect('/editproject/38?submitted=True')
+    else:
+        if 'submitted' in request.GET:
+            submitted = True
+        project = Project.objects.get(id=_id)
+        edit_form = EditProject(instance=project)
+
+    return render(request, 'Projects/edit_project.html', {'edit_form': edit_form , 'submitted': submitted})
 
 
 def project_details(request, _id):
@@ -115,6 +128,37 @@ def project_rate(request):
             return JsonResponse({"done": "done"})
         else:
             return JsonResponse({"error": "error"})
+
+
+def delete_image(request):
+    if request.is_ajax and request.method == "GET":
+        result=Picture.objects.filter(project_id=request.GET['id'], pic_path=request.GET['img']).delete()
+
+    if result:
+        return JsonResponse({"done": "done"})
+    else:
+        return JsonResponse({"error": "error"})
+
+
+def add_image(request):
+    if request.method == 'POST':
+        # print("imffileeee", image_file)
+        if request.FILES.getlist('images'):
+            image_file = request.FILES.getlist('images')
+            for i in image_file:
+                fs = FileSystemStorage()
+                filename = fs.save('images/projects/' + i.name, i)
+                img = Picture()
+                img.pic_path = filename
+                project = Project.objects.get(id=request.POST['project'])
+                img.project_id = project
+                img.save()
+
+                print(project)
+    if img:
+        return HttpResponseRedirect("/projects")
+    else:
+        return HttpResponseServerError
 
 
 def home_page(request):
