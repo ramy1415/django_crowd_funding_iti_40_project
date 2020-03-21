@@ -46,6 +46,7 @@ class Picture(models.Model):
     pic_path = models.ImageField(
         upload_to='images/projects/')
 
+
     def __str__(self):
         return str(self.pic_path)
 

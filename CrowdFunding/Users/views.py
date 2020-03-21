@@ -13,6 +13,8 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+from .forms import UpdateUserForm, UpdateProfileForm
+from django.contrib import messages
 
 #------------------------------------------------------------------------
 # views.functions
@@ -109,3 +111,23 @@ def activate(request, uidb64, token):
         return HttpResponse('Activation link is invalid!')
 
 #--------------------------------------------------------------------------------------
+@login_required()
+def user_profile(request):
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form =UpdateProfileForm(request.POST,
+                                        request.FILES,
+                                        instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request,"Your account has been updated!")
+            return redirect('/profile')
+    else :
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = UpdateProfileForm(instance=request.user.profile)
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+    return render(request,'Users/profile.html',context)
