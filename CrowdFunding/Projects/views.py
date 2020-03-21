@@ -39,11 +39,8 @@ def add_project(request):
                     img.project_id = project
                     img.save()
 
-<<<<<<< HEAD
             return HttpResponseRedirect('/addproject?submitted=True')
-=======
-            return home_page(request)
->>>>>>> 8f291a130c68d86bacb6e57a2bf0b57ad7a7d492
+
     else:
         form = AddProject()
         if 'submitted' in request.GET:
@@ -52,7 +49,7 @@ def add_project(request):
     return render(request, 'Projects/add_project.html', {'form': form, 'submitted': submitted})
 
 
-<<<<<<< HEAD
+
 def edit_project(request, _id):
     submitted = False
     if request.method == 'POST':
@@ -69,8 +66,7 @@ def edit_project(request, _id):
 
     return render(request, 'Projects/edit_project.html', {'edit_form': edit_form , 'submitted': submitted})
 
-=======
->>>>>>> 8f291a130c68d86bacb6e57a2bf0b57ad7a7d492
+
 
 def project_details(request, _id):
     project = Project.objects.get(id=_id)
@@ -139,7 +135,6 @@ def project_rate(request):
             return JsonResponse({"error": "error"})
 
 
-<<<<<<< HEAD
 def delete_image(request):
     if request.is_ajax and request.method == "GET":
         result=Picture.objects.filter(project_id=request.GET['id'], pic_path=request.GET['img']).delete()
@@ -175,8 +170,7 @@ def home_page(request):
     return render(request, "Projects/home_page.html")
 
 
-=======
->>>>>>> 8f291a130c68d86bacb6e57a2bf0b57ad7a7d492
+
 def all_projects(request):
     all_projects = Project.objects.all()
     all_pictures = Picture.objects.all()
@@ -200,6 +194,7 @@ def all_projects(request):
             i.rate_percentage = 0
             i.rate = 0
     return render(request, 'Projects/all_projects.html', {'all_projects': all_projects})
+
 
 def home_page(request):
     top_rated = []
