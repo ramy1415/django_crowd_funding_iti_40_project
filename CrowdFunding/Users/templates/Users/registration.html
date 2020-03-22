@@ -12,8 +12,13 @@
 <div class="container">
     <div class="jumbotron">
         {% if registered %}
-        <h1>Thank you for registering Please Visit Your To Activate Your Account!</h1>
-        {% else %}
+        <h1>Please Visit Your E-mail To Activate Your Account!</h1>
+        <hr>
+
+        <h2>while activation is still disabled!</h2>
+        <label for="login">
+            <a class="nav-link" href="{% url 'Users:login' %}">Login Directly</a>
+        </label> {% else %}
         <h1>Register Here</h1>
         <form enctype="multipart/form-data" method="POST">
             {% csrf_token %} {{ user_form.as_p }} {{ profile_form.as_p }}

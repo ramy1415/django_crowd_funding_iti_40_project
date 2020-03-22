@@ -2,17 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="59e520c2-4885-47d6-993a-c12c08776bf0" name="Default Changelist" comment="Merge branch 'master' of https://github.com/ramy1415/django_crowd_funding_iti_40_project&#10;&#10;# Conflicts:&#10;#&#9;CrowdFunding/CrowdFunding/__pycache__/settings.cpython-38.pyc&#10;#&#9;CrowdFunding/CrowdFunding/__pycache__/urls.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/__pycache__/__init__.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/__pycache__/admin.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/__pycache__/apps.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/__pycache__/models.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/__pycache__/urls.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/__pycache__/views.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/migrations/__pycache__/__init__.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/crowd_funding_iti_40/__pycache__/__init__.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/crowd_funding_iti_40/__pycache__/wsgi.cpython-38.pyc">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/Users/templates/Users/my_donations.html" beforeDir="false" afterPath="$PROJECT_DIR$/Users/templates/Users/my_donations.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Users/templates/Users/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/Users/templates/Users/profile.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Users/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Users/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Users/views.py" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Projects/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Projects/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Projects/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Projects/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/files/jquery-emoji-ratings" beforeDir="false" afterPath="$PROJECT_DIR$/files/jquery-emoji-ratings" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Projects/project_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Projects/project_details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
+>>>>>>> c6cff0b2da759bf2e7eb275de9fe1f72ddbf44f0
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+<<<<<<< HEAD
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
@@ -107,6 +116,8 @@
       </file>
     </leaf>
   </component>
+=======
+>>>>>>> c6cff0b2da759bf2e7eb275de9fe1f72ddbf44f0
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -119,19 +130,17 @@
     <findStrings>
       <find>submitbutton</find>
       <find>latest projects</find>
-      <find>static</find>
-      <find>cris</find>
+      <find>&lt;a&gt;</find>
+      <find>href</find>
     </findStrings>
-    <dirStrings>
-      <dir>F:\BE SAFE2\ITI\iti\Django\new_repo\django_crowd_funding_iti_40_project\CrowdFunding</dir>
-    </dirStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
+  <component name="ProjectConfigurationFiles">
+    <option name="files">
       <list>
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/Projects/templatetags/filters.py" />
         <option value="$PROJECT_DIR$/CrowdFunding/urls.py" />
         <option value="$PROJECT_DIR$/templates/Projects/project_list.html" />
@@ -149,6 +158,12 @@
         <option value="$PROJECT_DIR$/Users/urls.py" />
         <option value="$PROJECT_DIR$/Users/templates/Users/my_donations.html" />
         <option value="$PROJECT_DIR$/Users/views.py" />
+=======
+        <option value="$PROJECT_DIR$/.idea/CrowdFunding.iml" />
+        <option value="$PROJECT_DIR$/.idea/misc.xml" />
+        <option value="$PROJECT_DIR$/.idea/modules.xml" />
+        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
+>>>>>>> c6cff0b2da759bf2e7eb275de9fe1f72ddbf44f0
       </list>
     </option>
   </component>
@@ -158,6 +173,7 @@
     <option name="width" value="1346" />
     <option name="height" value="688" />
   </component>
+<<<<<<< HEAD
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
@@ -180,23 +196,13 @@
       </pane>
     </panes>
   </component>
+=======
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+>>>>>>> c6cff0b2da759bf2e7eb275de9fe1f72ddbf44f0
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -211,6 +217,7 @@
     </task>
     <servers />
   </component>
+<<<<<<< HEAD
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <layout>
@@ -252,41 +259,16 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout-to-restore>
   </component>
+=======
+>>>>>>> c6cff0b2da759bf2e7eb275de9fe1f72ddbf44f0
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
             <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
-              <option name="COLUMN_ORDER">
-                <list>
-                  <option value="0" />
-                  <option value="1" />
-                  <option value="2" />
-                  <option value="3" />
-                </list>
-              </option>
+              <option name="COLUMN_ORDER" />
             </State>
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="RECENT_FILTERS">
-      <map>
-        <entry key="Branch">
-          <value>
-            <list />
-          </value>
-        </entry>
-        <entry key="User">
-          <value>
-            <list />
           </value>
         </entry>
       </map>
@@ -303,6 +285,7 @@
       </breakpoints>
     </breakpoint-manager>
   </component>
+<<<<<<< HEAD
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/manage.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -504,4 +487,6 @@
       </provider>
     </entry>
   </component>
+=======
+>>>>>>> c6cff0b2da759bf2e7eb275de9fe1f72ddbf44f0
 </project>

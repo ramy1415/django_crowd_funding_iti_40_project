@@ -42,7 +42,7 @@ def users_register(request):
             user.set_password(user.password)
             #it should be false but for easy testing login after register 
             # i set it true to skip activation and login easly.
-            user.is_active = False
+            user.is_active = True
             user.save()
 
 
@@ -82,6 +82,13 @@ def users_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        # try:
+        #     me = User.objects.get(username=request.POST['username'])
+        #     if me.password == request.POST['password']:
+        #         request.session['username'] = me.id
+        #         return HttpResponseRedirect('/you-are-logged-in/')
+        # except User.DoesNotExist:
+        #      return HttpResponse("Your username and password didn't match.")
         # to login with both email and password , i set email=username in the query
         user = authenticate(username=User.objects.get(email=username), password=password)
         if user:
@@ -170,3 +177,11 @@ def delete_account(request):
         return redirect('/login')
     else :
         return render(request, 'Users/confirm_delete.html')
+#--------------------------------------------------------------------------------
+
+def users_logout(request):
+    try:
+        del request.session['username']
+    except KeyError:
+        pass
+    return render(request,'Users/logout.html')

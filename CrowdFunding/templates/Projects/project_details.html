@@ -92,12 +92,14 @@
 
     // Run getRatings when DOM loads
     document.addEventListener('DOMContentLoaded', function(){
+
        getRatings({{rate}});
        console.log({{rate}});
        document.querySelector("#submit").onclick=function(){
        comment=document.getElementsByTagName("textarea")[0].value;
        console.log(comment);
        updateComment(comment);}
+
        const ratingControl = document.getElementById('rating-control');
        ratingControl.value ={{rate}};
 
@@ -110,6 +112,23 @@
 
     });
 });
+    function deleteImg(){
+         $.ajax({
+            type:'GET',
+            url:"/deleteimg/",
+            data:{"img":$(".active")[1].id,
+            "id":{{project.id}},
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+            success: function (response) {
+            if($(".active")[1].children)
+               { $($(".active")[1].children).attr("src","{% static 'images/projects/no-image-icon.png' %}");
+                $($(".active")[1].children).css("height", "500px")}},
+             error: function (response) {
+                // alert the error if any error occured
+                alert(response);
+            }})
+
+    };
 
 
     function getRatings(ratee) {
@@ -128,7 +147,7 @@
     }
 
 </script>
-
+<div class="container">
   <div class="row">
 
       <!-- Post Content Column -->
@@ -146,7 +165,7 @@
         <hr>
 
         <!-- Date/Time -->
-        <p>{{project.start_date}}</p>
+          <p>{{project.start_time}}</p>
 
         <hr>
 
@@ -168,21 +187,16 @@
 
   <!-- The slideshow -->
           <div class="carousel-inner">
-            {% for i in picnum %}
-              {%if not i %}
+            {%for picture in pictures %}
+              {% if forloop.first %}
+                <div class="carousel-item active" id="{{picture}}">
+                   <img class="fas fa-trash" src="{% static '' %}{{picture}}"  width="1100" height="500" >
 
-                <div class="carousel-item active" >
-                  <img src="{% static '' %}{{pictures.0}}"  width="1100" height="500">
                 </div>
               {% else %}
-                {%for picture in pictures %}
-                    {%if picture != pictures.0 %}
-                <div class="carousel-item " >
-                  <img src="{% static '' %}{{picture}}"  width="1100" height="500">
-
+                <div class="carousel-item " id="{{picture}}">
+                    <img src="{% static '' %}{{picture}}"   width="1100" height="500" onclick="deleteImg('{{picture}}',{{forloop.counter0 }})"/>
                 </div>
-                {% endif %}
-                {% endfor %}
                 {% endif %}
                 {% endfor %}
 
@@ -196,7 +210,22 @@
             <span class="carousel-control-next-icon"></span>
           </a>
         </div>
-        <div >
+            <div style="display:inline-block">
+                <li class=" fas fa-trash btn btn-danger " style="margin-top:7px" onclick="deleteImg()"> </li>
+            </div>
+          <!-- image add and delete controls -->
+          {%if user%}
+           <div style="display:inline-block">
+               <form action="/addimage/" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                <input type="hidden" name="project" value="{{project.id}}">
+                <label for="files" class="btn"><i style="margin-top:15px " class=" btn btn-info far fa-image" ></i></label>
+                <input id="files" style="visibility:hidden;" type="file" onchange="this.form.submit()" name="images" multiple/>
+               </form>
+            </div>
+          {% endif %}
+        <!-- Donation progressbar -->
+          <div >
             <div><h3 class="fa">Donation:</h3></div>
               <div class="progress">
                 <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{donationbar}}"
@@ -204,8 +233,11 @@
                   {% widthratio donationbar 1 100 %}% Complete (success)
                 </div>
               </div>
-        </div>
+          </div>
 
+        <div>
+            <p>Ends at :{{project.end_time}}</p>
+        </div>
 
         <hr>
 
@@ -289,7 +321,8 @@
         </div>
       </div>
     </div>
-    <!-- /.row -->
+    </div>
+    
 {% endblock %}
 
 
