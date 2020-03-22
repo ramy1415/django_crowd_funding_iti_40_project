@@ -84,8 +84,8 @@ def project_details(request, _id):
     donation = project.current_money / project.total_target
     picnum = []
 
-    if Rate.objects.get(project_id=_id, user_id=1):
-        rate = Rate.objects.get(project_id=_id, user_id=1)
+    if Rate.objects.get(project_id=_id, user_id=request.user):
+        rate = Rate.objects.get(project_id=_id, user_id=request.user)
         ratenum = int(str(rate).split(":", 4)[3])
     else:
         ratenum = 0
@@ -102,7 +102,7 @@ def project_details(request, _id):
         'tags': tags,
         'rate': ratenum,
         # must be get from session
-        "user": User.objects.get(id=1)
+        "user": request.user,
     }
     return render(request, 'Projects/project_details.html', context)
 
@@ -113,7 +113,7 @@ def project_comment(request):
         print("comment", request.GET['comment'])
         comment.comment_body = request.GET['comment']
         comment.project_id = Project.objects.get(id=request.GET['id'])
-        comment.user_id = User.objects.get(id=1)
+        comment.user_id = request.user
         comment.save()
 
     if comment:
@@ -126,7 +126,7 @@ def project_rate(request):
     if request.is_ajax and request.method == "POST":
 
         result = Rate.objects.update_or_create(
-            project_id=Project.objects.get(id=request.POST['id']), user_id=User.objects.get(id=1),
+            project_id=Project.objects.get(id=request.POST['id']), user_id=request.user,
             defaults={'rate': request.POST['rate']}, )
 
         if result:
@@ -166,9 +166,31 @@ def add_image(request):
         return HttpResponseServerError
 
 
-def home_page(request):
-    return render(request, "Projects/home_page.html")
+def add_donation(request):
+    if request.is_ajax and request.method == "GET":
+        new_donation = int(request.GET['donation'])
+        project=Project.objects.get(id=request.GET['id'])
+        oldprojectdonation = project.current_money
+        resulte=Project.objects.filter(id=request.GET['id']).update(current_money=oldprojectdonation+new_donation)
+        try:
+            donation = Donation.objects.get(user_id=request.user, project_id=Project.objects.get(id=request.GET['id']))
+            old_donation = donation.amount
+            new_donation += int(old_donation)
+            res = Donation.objects.filter(user_id=request.user, project_id=Project.objects.get(id=request.GET['id'])).update(amount=new_donation)
 
+            if res and resulte:
+                return JsonResponse({"done": "done"})
+            else:
+                return JsonResponse({"error": "error"})
+
+        except Donation.DoesNotExist:
+            donation = Donation(user_id=request.user, project_id=Project.objects.get(id=request.GET['id']),amount =new_donation)
+            donation.save()
+
+            if donation and resulte:
+                return JsonResponse({"done": "done"})
+            else:
+                return JsonResponse({"error": "error"})
 
 
 def all_projects(request):

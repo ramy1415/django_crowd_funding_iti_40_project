@@ -3,11 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="59e520c2-4885-47d6-993a-c12c08776bf0" name="Default Changelist" comment="Merge branch 'master' of https://github.com/ramy1415/django_crowd_funding_iti_40_project&#10;&#10;# Conflicts:&#10;#&#9;CrowdFunding/CrowdFunding/__pycache__/settings.cpython-38.pyc&#10;#&#9;CrowdFunding/CrowdFunding/__pycache__/urls.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/__pycache__/__init__.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/__pycache__/admin.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/__pycache__/apps.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/__pycache__/models.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/__pycache__/urls.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/__pycache__/views.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/Projects/migrations/__pycache__/__init__.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/crowd_funding_iti_40/__pycache__/__init__.cpython-38.pyc&#10;#&#9;crowd_funding_iti_40/crowd_funding_iti_40/__pycache__/wsgi.cpython-38.pyc">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Projects/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/Projects/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Projects/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Projects/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Projects/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Projects/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/files/jquery-emoji-ratings" beforeDir="false" afterPath="$PROJECT_DIR$/files/jquery-emoji-ratings" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/Projects/project_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Projects/project_details.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,14 +22,6 @@
         <option value="HTML File" />
       </list>
     </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>submitbutton</find>
-      <find>latest projects</find>
-      <find>&lt;a&gt;</find>
-      <find>href</find>
-    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -80,6 +73,12 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="370" y="27" width="683" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1584841262000">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state x="370" y="27" width="683" height="741" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/67.27.1299.741@67.27.1299.741" timestamp="1584841262000" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
