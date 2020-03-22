@@ -15,6 +15,9 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from .forms import UpdateUserForm, UpdateProfileForm
 from django.contrib import messages
+from Projects.models import Project,Donation
+from django.db.models import Sum
+
 
 #------------------------------------------------------------------------
 # views.functions
@@ -39,7 +42,7 @@ def users_register(request):
             user.set_password(user.password)
             #it should be false but for easy testing login after register 
             # i set it true to skip activation and login easly.
-            user.is_active = False
+            user.is_active = True
             user.save()
 
 
@@ -79,6 +82,13 @@ def users_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        # try:
+        #     me = User.objects.get(username=request.POST['username'])
+        #     if me.password == request.POST['password']:
+        #         request.session['username'] = me.id
+        #         return HttpResponseRedirect('/you-are-logged-in/')
+        # except User.DoesNotExist:
+        #      return HttpResponse("Your username and password didn't match.")
         # to login with both email and password , i set email=username in the query
         user = authenticate(username=User.objects.get(email=username), password=password)
         if user:
@@ -131,3 +141,47 @@ def user_profile(request):
         'profile_form': profile_form
     }
     return render(request,'Users/profile.html',context)
+
+
+def my_donations(request):
+    user = request.user
+    donations = Donation.objects.values('project_id')\
+        .annotate(total_donation=Sum('amount'))\
+        .filter(user_id=user)
+    donation_list = []
+    for donate in donations:
+        title = Project.objects.filter(id=donate['project_id']).first()
+        donation_list.append({
+            'id':donate['project_id'],
+            'title':title,
+            'donation':donate['total_donation']
+        })
+    context = {
+        'donations' : donation_list
+    }
+    return render(request, 'Users/my_donations.html', context)
+
+
+def my_projects(request):
+    user = request.user
+    projects = Project.objects.filter(user_id=user)
+    context = {
+        'projects' : projects
+    }
+    return render(request, 'Users/my_projects.html',context)
+
+def delete_account(request):
+    user = request.user.id
+    if request.method == 'POST':
+        User.objects.filter(id=user).delete()
+        return redirect('/login')
+    else :
+        return render(request, 'Users/confirm_delete.html')
+#--------------------------------------------------------------------------------
+
+def users_logout(request):
+    try:
+        del request.session['username']
+    except KeyError:
+        pass
+    return render(request,'Users/logout.html')

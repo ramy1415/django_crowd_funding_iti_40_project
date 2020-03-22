@@ -17,21 +17,14 @@
                 <div class="side-bar">
                     <div class="user-info">
                         <img class="img-profile img-circle img-responsive center-block" src="{{ user.profile.profile_pic.url }}" alt="">
-<!--                        <ul class="meta list list-unstyled">-->
-<!--                            <li class="name label label-info "><span class="label label-info">{{user.first_name}} {{user.last_name}}</span>-->
-<!--                            </li>-->
-
-<!--                        </ul>-->
                         <h4 class="bg-warning text-white rounded-pill p-2" >{{user.first_name|capfirst}} {{user.last_name|capfirst}}</h4>
-
                     </div>
             		<nav class="side-menu">
         				<ul class="nav">
         					<li><a href="/profile"><span class="fa fa-user"></span> Profile</a></li>
         					<li><a href="/profile/my_projects"><span class="fa fa-clipboard-list"></span> My Projects</a></li>
-        					<li class="active"><a href="/profile/my_donations"><span class="fa fa-donate"></span> My Donations</a></li>
-                            <li><a href="/profile/delete" class="text-danger"><span class="fa fa-minus-circle text-danger"></span> Delete My Account</a></li>
-
+        					<li><a href="/profile/my_donations"><span class="fa fa-donate"></span> My Donations</a></li>
+                            <li class="active"><a href="/profile/delete" class="text-danger"><span class="fa fa-minus-circle text-danger"></span> Delete My Account</a></li>
 
         				</ul>
         			</nav>
@@ -39,27 +32,21 @@
                 <div class="content-panel">
 
 <!--                    Here-->
-                    <h2 class="title">My Donations</h2>
-                    <table class="table table-hover">
-                      <thead>
-                        <tr>
-                          <th scope="col">Project Title</th>
-                          <th scope="col">Donation</th>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <h2 class="title border-bottom pb-3">Delete My Account</h2>
+                        <div class="d-flex flex-column align-items-center">
+                            <div class="row mb-2">
+                                <i class="fa fa-times-circle fa-7x text-danger"></i>
+                            </div>
+                            <h4 class="text-dark">Are you sure?</h4>
+                            <div class=" row text-muted mb-2">
+                                <p >Do you really want to delete your account ? This process cannot be undone.</p>
+                            </div>
+                            <input class="btn btn-danger" type="submit" value="Delete">
 
-                        </tr>
-                      </thead>
-                      <tbody>
-
-                      {% for project in donations %}
-                      <tr>
-                          <td><a href="/projects/{{project.id}}">{{project.title}}</a></td>
-                          <td> {{project.donation}}&#36; </td>
-
-                        </tr>
-                      {% endfor %}
-
-                      </tbody>
-                    </table>
+                        </div>
+                    </form>
 <!--                    End-->
                 </div>
             </div>

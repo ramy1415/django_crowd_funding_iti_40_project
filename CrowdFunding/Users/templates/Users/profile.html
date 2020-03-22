@@ -29,20 +29,15 @@
                 <div class="side-bar">
                     <div class="user-info">
                         <img class="img-profile img-circle img-responsive center-block" src="{{ user.profile.profile_pic.url }}" alt="">
-<!--                        <ul class="meta list list-unstyled">-->
-<!--                            <li class="name label label-info "><span class="label label-info">{{user.first_name}} {{user.last_name}}</span>-->
-<!--                            </li>-->
-
-<!--                        </ul>-->
                         <h4 class="bg-warning text-white rounded-pill p-2" >{{user.first_name|capfirst}} {{user.last_name|capfirst}}</h4>
 
                     </div>
             		<nav class="side-menu">
         				<ul class="nav">
         					<li class="active"><a href="/profile"><span class="fa fa-user"></span> Profile</a></li>
-        					<li><a href="#"><span class="fa fa-clipboard-list"></span> My Projects</a></li>
-        					<li><a href="#"><span class="fa fa-donate"></span> My Donations</a></li>
-                            <li><a href="#" class="text-danger"><span class="fa fa-minus-circle text-danger"></span> Delete My Account</a></li>
+        					<li><a href="/profile/my_projects"><span class="fa fa-clipboard-list"></span> My Projects</a></li>
+        					<li><a href="/profile/my_donations"><span class="fa fa-donate"></span> My Donations</a></li>
+                            <li><a href="/profile/delete" class="text-danger"><span class="fa fa-minus-circle text-danger"></span> Delete My Account</a></li>
 
 
         				</ul>
