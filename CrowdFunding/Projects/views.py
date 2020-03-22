@@ -1,6 +1,6 @@
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render
-from .models import Category, Comment, Donation, Project, Picture, Rate, Tag,FeaturedProject
+from .models import Category, Comment, Donation, Project, Picture, Rate, Tag,FeaturedProject,ReportProject
 from Users.models import User
 from .forms import AddProject, EditProject
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponseServerError
@@ -8,7 +8,7 @@ from Users.models import Profile
 from django.utils import timezone
 from django.db.models import Max
 from django.db.models import Q
-
+from django.contrib.auth.decorators import login_required
 
 def add_project(request):
     submitted = False
@@ -170,30 +170,83 @@ def home_page(request):
     return render(request, "Projects/home_page.html")
 
 
+@login_required()
+def add_project_report(request):
+    if request.method == 'POST' :
+        print(request.user)
+        print(request.POST.get('project_id'))
+        print(request.POST.get('body'))
+        if request.POST.get('body') != "":
+            report=ReportProject()
+            report.project_id=Project.objects.get(id=request.POST.get('project_id')) 
+            report.user_id=request.user
+            report.report_project_body=request.POST.get('body')
+            report.save()
+            if report.id:
+                return JsonResponse({"message": "Thanks for letting us know"})
 
+
+        
+@login_required()
+def del_project_report(request):
+    if request.method == 'POST' :
+        print(request.user)
+        delete=ReportProject.objects.get(user_id=request.user,project_id=request.POST.get('project_id')).delete()
+        if delete:
+            return JsonResponse({"message": "removed your report"})
+
+
+
+@login_required()
 def all_projects(request):
+    print(request.POST)
+    if request.method == 'POST' :
+        if request.POST.get('comment') != "":
+            comment = Comment()
+            comment.comment_body = request.POST.get('comment')
+            comment.project_id = Project.objects.get(id=request.POST.get('project_id'))
+            comment.user_id = request.user
+            comment.save()
+            print(comment.user_id)
+            print(comment.project_id)
+            print(comment.comment_body)
+            if comment.id:
+                return JsonResponse({})
+
     all_projects = Project.objects.all()
     all_pictures = Picture.objects.all()
-    all_profiles = Profile.objects.all()
+    all_comments = Comment.objects.all().order_by('-id')
     all_rates = Rate.objects.all()
+    all_reports = ReportProject.objects.all()
+    try:
+        user_pic_url=Profile.objects.get(user=request.user).profile_pic.url
+    except Profile.DoesNotExist as identifier:
+        user_pic_url="/static/images/profiles/default_profile.png"
     for i in all_projects:
         i.pics = [pic.pic_path.url for pic in filter(lambda e: e.project_id_id == i.id, all_pictures)]
         if len(i.pics) == 0:
             i.pics = ["/static/images/projects/default_project.jpg"]
-        try:
-            i.user_pic = [pic.profile_pic.url for pic in filter(lambda e: e.user_id == i.user_id_id, all_profiles)][0]
-        except IndexError as identifier:
-            i.user_pic = "/static/images/profiles/default_profile.png"
-        i.remaining = str(i.end_time - timezone.localtime(timezone.now()).date()).split(",")[0]
+        if i.end_time > timezone.localtime(timezone.now()).date():
+            i.remaining = "Ends in "+str(i.end_time - timezone.localtime(timezone.now()).date()).split(",")[0]
+        else:
+            i.remaining= "Ended"
         i.progress = (i.current_money / i.total_target) * 100
         project_rates = [project.rate for project in filter(lambda e: e.project_id_id == i.id, all_rates)]
+        project_reports = [report.user_id for report in filter(lambda e: e.project_id_id == i.id, all_reports)]
+        i.project_reports=len(project_reports)
+        if request.user in project_reports:
+            i.is_reported=True
+        else:
+            i.is_reported=False
+        i.comments = [{'body':comment.comment_body,'user':comment.user_id} for comment in filter(lambda e: e.project_id_id == i.id, all_comments)]
         try:
             i.rate_percentage = ((sum(project_rates) / len(project_rates)) / 5) * 100
             i.rate = round(((sum(project_rates) / len(project_rates))), 1)
         except ZeroDivisionError as identifier:
             i.rate_percentage = 0
             i.rate = 0
-    return render(request, 'Projects/all_projects.html', {'all_projects': all_projects})
+        print(i.id)
+    return render(request, 'Projects/all_projects.html', {'all_projects': all_projects,'user_pic_url':user_pic_url})
 
 
 def home_page(request):
