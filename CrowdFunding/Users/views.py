@@ -90,17 +90,19 @@ def users_login(request):
         # except User.DoesNotExist:
         #      return HttpResponse("Your username and password didn't match.")
         # to login with both email and password , i set email=username in the query
-        user = authenticate(username=User.objects.get(email=username), password=password)
-        if user:
+        # user = authenticate(username=User.objects.get(email=username), password=password)
+        user = authenticate(username=username ,password=password)
+        print(user)
+        if user is not None:
             if user.is_active:
                 login(request,user)
-                return HttpResponseRedirect('/Users/index')
+                return HttpResponseRedirect('/profile/')
             else:
                 return HttpResponse("Your account was inactive.")
         else:
             print("Someone tried to login and failed.")
             print("They used username: {} and password: {}".format(username,password))
-            return HttpResponse("Invalid login details given")
+            return HttpResponseRedirect('/register/')
     else:
         return render(request, 'Users/login.html', {})
 #-------------------------------------------------------------------------------
@@ -182,6 +184,7 @@ def delete_account(request):
 def users_logout(request):
     try:
         del request.session['username']
+        request.session.flush()
     except KeyError:
         pass
     return render(request,'Users/logout.html')

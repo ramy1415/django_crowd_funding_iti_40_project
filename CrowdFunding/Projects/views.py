@@ -223,6 +223,7 @@ def del_project_report(request):#ajax remove report
 
 
 @login_required()
+#esraa
 def all_projects(request):
     if request.method == 'POST' : #ajax add comment
         if request.POST.get('comment') != "":
@@ -278,9 +279,7 @@ def all_projects(request):
 
     return render(request, 'Projects/all_projects.html', {'all_projects': all_projects,'user_pic_url':user_pic_url})
 
-#========================================================================end of ramy's tasks==================================================================        
-
-
+#esraa
 def home_page(request):
     top_rated = []
     top_rated = Rate.objects.values('project_id') \
@@ -303,7 +302,7 @@ def home_page(request):
                                                        'featured_projects': featured_projects,
                                                        'categories': categories})
 
-
+#esraa
 def project_list(request, id):
     project_list = []
     category_proj = Project.objects.filter(category=int(id)).values(('id'))
@@ -311,7 +310,7 @@ def project_list(request, id):
         project_list.append(Picture.objects.filter(project_id=pro['id']))
     return render(request, 'Projects/project_list.html', {'project_list': project_list})
 
-
+#esraa
 def search_projects(request):
     # print(data)
     project_list=[]
