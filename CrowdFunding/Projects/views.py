@@ -223,7 +223,6 @@ def del_project_report(request):#ajax remove report
 
 
 @login_required()
-#esraa
 def all_projects(request):
     if request.method == 'POST' : #ajax add comment
         if request.POST.get('comment') != "":

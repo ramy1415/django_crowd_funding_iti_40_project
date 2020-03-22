@@ -15,10 +15,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="/profile">profile</a>
             </li>
-            <div class="navbar-collapse collapse justify-content-between top-right">
+            </ul>
+            <ul class="navbar-nav ml-auto"">
+            <li class="nav-item d-flex">
                 {% if user.is_authenticated %}
                 <label for="go profile" class="nav-link">Welcom :</label>
-                <a class="nav-link text-info" href="/profile"> {{ user.username }}</a>
+                <a class="nav-link text-info d-inline" href="/profile"> {{ user.username }}</a>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'Users:logout' %}">Logout</a>
                 </li>
@@ -32,11 +34,9 @@
                     </li>
                 </ul>
                 {% endif %}
-            </div>
+            </li>
 
-            <!-- <li class="nav-item">
-              <a class="nav-link" href="#">Log out</a>
-          </li> -->
+
 
         </ul>
     </div>
