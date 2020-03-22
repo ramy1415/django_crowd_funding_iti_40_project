@@ -198,7 +198,9 @@
         <!-- Date/Time -->
           <h4 >{{project.start_time}}</h4>
           <!-- Edit icon-->
+            {%if user == project.user_id%}
           <a  href="/editproject/{{project.id}}" class=" button btn btn-info"><i class="fas fa-edit"></i></a>
+            {% endif %}
         </div>
 
         <hr>
@@ -332,10 +334,14 @@
         <fragment id="comments">
         {% for comment in comments %}
         <div class="media mb-4">
-          <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-          <div class="media-body">
+           {% if comment.1 %}
+          <img class="d-flex mr-3 rounded-circle" src="{% static '' %}{{comment.1.profile_pic}}" height="50px" width="50px" alt="">
+            {% else %}
+           <img class="d-flex mr-3 rounded-circle" src="{% static 'images/projects/no-image-icon.png' %}" width="50px" height="50px" alt="">
+          {% endif %}
+            <div class="media-body">
             <h5 class="mt-0"> {{ comment.0 }}</h5>
-            {{ comment.1 }}
+            {{ comment.2 }}
           </div>
         </div>
         {% endfor %}

@@ -2,34 +2,57 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="aada01d1-ac84-4221-a61a-ba896437d7ab" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Users/templates/Users/confirm_delete.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Users/templates/Users/logout.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Users/templates/Users/my_projects.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/files/images/profiles/userAvatar_QA9pV2E.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/files/images/profiles/userAvatar_bGQTqPw.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/files/images/profiles/userAvatar_n4odRk0.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Users/templates/Users/my_donations.html" beforeDir="false" afterPath="$PROJECT_DIR$/Users/templates/Users/my_donations.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Users/templates/Users/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/Users/templates/Users/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Users/templates/Users/registration.html" beforeDir="false" afterPath="$PROJECT_DIR$/Users/templates/Users/registration.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Users/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Users/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Users/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Projects/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Projects/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/files/jquery-emoji-ratings" beforeDir="false" afterPath="$PROJECT_DIR$/files/jquery-emoji-ratings" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Projects/all_projects.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Projects/all_projects.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/partials/nav_bar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/partials/nav_bar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Projects/project_details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Projects/project_details.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1ZTmiCHTe1tnsTafCQ33wn4dFJM" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$USER_HOME$/PycharmProjects/odoo" />
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
   <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="aada01d1-ac84-4221-a61a-ba896437d7ab" name="Default Changelist" comment="" />
+      <created>1584871585178</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1584871585178</updated>
+    </task>
     <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="174" y="54" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1584883772613">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state x="174" y="54" key="#com.intellij.execution.impl.EditConfigurationsDialog/67.27.1299.741@67.27.1299.741" timestamp="1584883772613" />
+    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl" timestamp="1584872196515">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state x="499" y="154" width="424" height="484" key="FileChooserDialogImpl/67.27.1299.741@67.27.1299.741" timestamp="1584872196515" />
+    <state x="372" y="224" key="com.intellij.ide.util.TipDialog" timestamp="1584871600720">
+      <screen x="67" y="27" width="1299" height="741" />
+    </state>
+    <state x="372" y="224" key="com.intellij.ide.util.TipDialog/67.27.1299.741@67.27.1299.741" timestamp="1584871600720" />
   </component>
 </project>

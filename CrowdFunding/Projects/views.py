@@ -10,6 +10,7 @@ from django.db.models import Max
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 
+
 def add_project(request):
     submitted = False
     if request.method == 'POST':
@@ -49,7 +50,6 @@ def add_project(request):
     return render(request, 'Projects/add_project.html', {'form': form, 'submitted': submitted})
 
 
-
 def edit_project(request, _id):
     submitted = False
     if request.method == 'POST':
@@ -57,7 +57,7 @@ def edit_project(request, _id):
         edit_form = EditProject(request.POST, instance=project)
         edit_form.save()
 
-        return HttpResponseRedirect('/editproject/38?submitted=True')
+        return HttpResponseRedirect('/projects/' +str( _id))
     else:
         if 'submitted' in request.GET:
             submitted = True
@@ -67,7 +67,6 @@ def edit_project(request, _id):
     return render(request, 'Projects/edit_project.html', {'edit_form': edit_form , 'submitted': submitted})
 
 
-
 def project_details(request, _id):
     project = Project.objects.get(id=_id)
     print(project)
@@ -75,19 +74,26 @@ def project_details(request, _id):
     print(pictures)
     comments = Comment.objects.filter(project_id=_id).values('user_id', 'comment_body')
     commentsdict = []
+
     for comment in comments:
         print(comment)
-        commentsdict.append(tuple([User.objects.get(id=comment['user_id']), comment['comment_body']]))
+        commentuserimags = Profile.objects.filter(user=comment['user_id']).values('profile_pic')
+        if commentuserimags:
+            commentuserimg = commentuserimags[0]
+        else:
+            commentuserimg=0
+        commentsdict.append(tuple([User.objects.get(id=comment['user_id']),commentuserimg, comment['comment_body']]))
     tags = project.tags.all()
-    print(commentsdict)
+    print("alaa",commentsdict)
     print(tags)
     donation = project.current_money / project.total_target
     picnum = []
 
-    if Rate.objects.get(project_id=_id, user_id=request.user):
+    try:
+
         rate = Rate.objects.get(project_id=_id, user_id=request.user)
         ratenum = int(str(rate).split(":", 4)[3])
-    else:
+    except:
         ratenum = 0
 
     print(ratenum)
