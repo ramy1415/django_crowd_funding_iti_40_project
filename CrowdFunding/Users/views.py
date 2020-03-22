@@ -182,9 +182,5 @@ def delete_account(request):
 #--------------------------------------------------------------------------------
 
 def users_logout(request):
-    try:
-        del request.session['username']
-        request.session.flush()
-    except KeyError:
-        pass
-    return render(request,'Users/logout.html')
+    request.session.flush()
+    return render(request, 'Users/login.html')
