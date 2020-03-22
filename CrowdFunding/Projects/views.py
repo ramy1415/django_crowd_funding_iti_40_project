@@ -1,13 +1,14 @@
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render
-from .models import Category, Comment, Donation, Project, Picture, Rate, Tag,FeaturedProject
+from .models import Category, Comment, Donation, Project, Picture, Rate, Tag,FeaturedProject,ReportProject
 from Users.models import User
-from .forms import AddProject
-from django.http import JsonResponse
+from .forms import AddProject, EditProject
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponseServerError
 from Users.models import Profile
 from django.utils import timezone
 from django.db.models import Max
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 
 def add_project(request):
@@ -39,7 +40,8 @@ def add_project(request):
                     img.project_id = project
                     img.save()
 
-            return home_page(request)
+            return HttpResponseRedirect('/addproject?submitted=True')
+
     else:
         form = AddProject()
         if 'submitted' in request.GET:
@@ -47,6 +49,22 @@ def add_project(request):
 
     return render(request, 'Projects/add_project.html', {'form': form, 'submitted': submitted})
 
+
+def edit_project(request, _id):
+    submitted = False
+    if request.method == 'POST':
+        project = Project.objects.get(id=_id)
+        edit_form = EditProject(request.POST, instance=project)
+        edit_form.save()
+
+        return HttpResponseRedirect('/projects/' +str( _id))
+    else:
+        if 'submitted' in request.GET:
+            submitted = True
+        project = Project.objects.get(id=_id)
+        edit_form = EditProject(instance=project)
+
+    return render(request, 'Projects/edit_project.html', {'edit_form': edit_form , 'submitted': submitted})
 
 
 def project_details(request, _id):
@@ -56,19 +74,26 @@ def project_details(request, _id):
     print(pictures)
     comments = Comment.objects.filter(project_id=_id).values('user_id', 'comment_body')
     commentsdict = []
+
     for comment in comments:
         print(comment)
-        commentsdict.append(tuple([User.objects.get(id=comment['user_id']), comment['comment_body']]))
+        commentuserimags = Profile.objects.filter(user=comment['user_id']).values('profile_pic')
+        if commentuserimags:
+            commentuserimg = commentuserimags[0]
+        else:
+            commentuserimg=0
+        commentsdict.append(tuple([User.objects.get(id=comment['user_id']),commentuserimg, comment['comment_body']]))
     tags = project.tags.all()
-    print(commentsdict)
+    print("alaa",commentsdict)
     print(tags)
     donation = project.current_money / project.total_target
     picnum = []
 
-    if Rate.objects.get(project_id=_id, user_id=1):
-        rate = Rate.objects.get(project_id=_id, user_id=1)
+    try:
+
+        rate = Rate.objects.get(project_id=_id, user_id=request.user)
         ratenum = int(str(rate).split(":", 4)[3])
-    else:
+    except:
         ratenum = 0
 
     print(ratenum)
@@ -83,7 +108,7 @@ def project_details(request, _id):
         'tags': tags,
         'rate': ratenum,
         # must be get from session
-        "user": User.objects.get(id=1)
+        "user": request.user,
     }
     return render(request, 'Projects/project_details.html', context)
 
@@ -94,7 +119,7 @@ def project_comment(request):
         print("comment", request.GET['comment'])
         comment.comment_body = request.GET['comment']
         comment.project_id = Project.objects.get(id=request.GET['id'])
-        comment.user_id = User.objects.get(id=1)
+        comment.user_id = request.user
         comment.save()
 
     if comment:
@@ -107,7 +132,7 @@ def project_rate(request):
     if request.is_ajax and request.method == "POST":
 
         result = Rate.objects.update_or_create(
-            project_id=Project.objects.get(id=request.POST['id']), user_id=User.objects.get(id=1),
+            project_id=Project.objects.get(id=request.POST['id']), user_id=request.user,
             defaults={'rate': request.POST['rate']}, )
 
         if result:
@@ -116,30 +141,143 @@ def project_rate(request):
             return JsonResponse({"error": "error"})
 
 
+def delete_image(request):
+    if request.is_ajax and request.method == "GET":
+        result=Picture.objects.filter(project_id=request.GET['id'], pic_path=request.GET['img']).delete()
+
+    if result:
+        return JsonResponse({"done": "done"})
+    else:
+        return JsonResponse({"error": "error"})
+
+
+def add_image(request):
+    if request.method == 'POST':
+        # print("imffileeee", image_file)
+        if request.FILES.getlist('images'):
+            image_file = request.FILES.getlist('images')
+            for i in image_file:
+                fs = FileSystemStorage()
+                filename = fs.save('images/projects/' + i.name, i)
+                img = Picture()
+                img.pic_path = filename
+                project = Project.objects.get(id=request.POST['project'])
+                img.project_id = project
+                img.save()
+
+                print(project)
+    if img:
+        return HttpResponseRedirect("/projects")
+    else:
+        return HttpResponseServerError
+
+
+def add_donation(request):
+    if request.is_ajax and request.method == "GET":
+        new_donation = int(request.GET['donation'])
+        project=Project.objects.get(id=request.GET['id'])
+        oldprojectdonation = project.current_money
+        resulte=Project.objects.filter(id=request.GET['id']).update(current_money=oldprojectdonation+new_donation)
+        try:
+            donation = Donation.objects.get(user_id=request.user, project_id=Project.objects.get(id=request.GET['id']))
+            old_donation = donation.amount
+            new_donation += int(old_donation)
+            res = Donation.objects.filter(user_id=request.user, project_id=Project.objects.get(id=request.GET['id'])).update(amount=new_donation)
+
+            if res and resulte:
+                return JsonResponse({"done": "done"})
+            else:
+                return JsonResponse({"error": "error"})
+
+        except Donation.DoesNotExist:
+            donation = Donation(user_id=request.user, project_id=Project.objects.get(id=request.GET['id']),amount =new_donation)
+            donation.save()
+
+            if donation and resulte:
+                return JsonResponse({"done": "done"})
+            else:
+                return JsonResponse({"error": "error"})
+
+@login_required()
+def add_project_report(request):
+    if request.method == 'POST' :
+        print(request.user)
+        print(request.POST.get('project_id'))
+        print(request.POST.get('body'))
+        if request.POST.get('body') != "":
+            report=ReportProject()
+            report.project_id=Project.objects.get(id=request.POST.get('project_id')) 
+            report.user_id=request.user
+            report.report_project_body=request.POST.get('body')
+            report.save()
+            if report.id:
+                return JsonResponse({"message": "Thanks for letting us know"})
+
+
+        
+@login_required()
+def del_project_report(request):
+    if request.method == 'POST' :
+        print(request.user)
+        delete=ReportProject.objects.get(user_id=request.user,project_id=request.POST.get('project_id')).delete()
+        if delete:
+            return JsonResponse({"message": "removed your report"})
+
+
+
+@login_required()
+#esraa
 def all_projects(request):
+    print(request.POST)
+    if request.method == 'POST' :
+        if request.POST.get('comment') != "":
+            comment = Comment()
+            comment.comment_body = request.POST.get('comment')
+            comment.project_id = Project.objects.get(id=request.POST.get('project_id'))
+            comment.user_id = request.user
+            comment.save()
+            print(comment.user_id)
+            print(comment.project_id)
+            print(comment.comment_body)
+            if comment.id:
+                return JsonResponse({})
+
     all_projects = Project.objects.all()
     all_pictures = Picture.objects.all()
-    all_profiles = Profile.objects.all()
+    all_comments = Comment.objects.all().order_by('-id')
     all_rates = Rate.objects.all()
+    all_reports = ReportProject.objects.all()
+    try:
+        user_pic_url=Profile.objects.get(user=request.user).profile_pic.url
+    except Profile.DoesNotExist as identifier:
+        user_pic_url="/static/images/profiles/default_profile.png"
     for i in all_projects:
         i.pics = [pic.pic_path.url for pic in filter(lambda e: e.project_id_id == i.id, all_pictures)]
         if len(i.pics) == 0:
             i.pics = ["/static/images/projects/default_project.jpg"]
-        try:
-            i.user_pic = [pic.profile_pic.url for pic in filter(lambda e: e.user_id == i.user_id_id, all_profiles)][0]
-        except IndexError as identifier:
-            i.user_pic = "/static/images/profiles/default_profile.png"
-        i.remaining = str(i.end_time - timezone.localtime(timezone.now()).date()).split(",")[0]
+        if i.end_time > timezone.localtime(timezone.now()).date():
+            i.remaining = "Ends in "+str(i.end_time - timezone.localtime(timezone.now()).date()).split(",")[0]
+        else:
+            i.remaining= "Ended"
         i.progress = (i.current_money / i.total_target) * 100
         project_rates = [project.rate for project in filter(lambda e: e.project_id_id == i.id, all_rates)]
+        project_reports = [report.user_id for report in filter(lambda e: e.project_id_id == i.id, all_reports)]
+        i.project_reports=len(project_reports)
+        if request.user in project_reports:
+            i.is_reported=True
+        else:
+            i.is_reported=False
+        i.comments = [{'body':comment.comment_body,'user':comment.user_id} for comment in filter(lambda e: e.project_id_id == i.id, all_comments)]
         try:
             i.rate_percentage = ((sum(project_rates) / len(project_rates)) / 5) * 100
             i.rate = round(((sum(project_rates) / len(project_rates))), 1)
         except ZeroDivisionError as identifier:
             i.rate_percentage = 0
             i.rate = 0
-    return render(request, 'Projects/all_projects.html', {'all_projects': all_projects})
+        print(i.id)
+    return render(request, 'Projects/all_projects.html', {'all_projects': all_projects,'user_pic_url':user_pic_url})
 
+#esraa
 def home_page(request):
     top_rated = []
     top_rated = Rate.objects.values('project_id') \
@@ -162,7 +300,7 @@ def home_page(request):
                                                        'featured_projects': featured_projects,
                                                        'categories': categories})
 
-
+#esraa
 def project_list(request, id):
     project_list = []
     category_proj = Project.objects.filter(category=int(id)).values(('id'))
@@ -170,7 +308,7 @@ def project_list(request, id):
         project_list.append(Picture.objects.filter(project_id=pro['id']))
     return render(request, 'Projects/project_list.html', {'project_list': project_list})
 
-
+#esraa
 def search_projects(request):
     # print(data)
     project_list=[]

@@ -5,8 +5,7 @@
         <form class="card col-6 mt-3 offset-3 text-center bg-info " method="post" action="{% url 'Users:login' %}">
 
             {% csrf_token %} {{ user_form.as_p }}
-            <label for="username">Email:</label>
-            <input type="email" name="username" placeholder="enter email">
+            <label for="username">user name:</label><input type="text" name="username" placeholder="enter username">
             <label for="password">Password:</label>
             <input type="password" name="password" placeholder="Password">
             <input class="btn btn-success" type="submit" name="" value="Login">
