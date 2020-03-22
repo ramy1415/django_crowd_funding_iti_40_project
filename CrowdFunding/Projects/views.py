@@ -199,8 +199,9 @@ def add_donation(request):
                 return JsonResponse({"error": "error"})
 
 
-#========================================================================ramy's tasks==================================================================        
-@login_required()
+#========================================================================ramy's tasks================================================================== 
+# ramy       
+@login_required(login_url='/login')
 def add_project_report(request):#ajax report
     if request.method == 'POST' :
         if request.POST.get('body') != "":
@@ -212,8 +213,8 @@ def add_project_report(request):#ajax report
             if report.id:   #if the report was added send back to user the message
                 return JsonResponse({"message": "Thanks for letting us know"})
 
-
-@login_required()
+# ramy
+@login_required(login_url='/login')
 def del_project_report(request):#ajax remove report
     if request.method == 'POST' :
         delete=ReportProject.objects.get(user_id=request.user,project_id=request.POST.get('project_id')).delete()
@@ -221,8 +222,8 @@ def del_project_report(request):#ajax remove report
             return JsonResponse({"message": "removed your report"})
 
 
-
-@login_required()
+# ramy
+@login_required(login_url='/login')
 def all_projects(request):
     if request.method == 'POST' : #ajax add comment
         if request.POST.get('comment') != "":
@@ -277,6 +278,10 @@ def all_projects(request):
             i.rate = 0
 
     return render(request, 'Projects/all_projects.html', {'all_projects': all_projects,'user_pic_url':user_pic_url})
+
+#========================================================================end of ramy's tasks==================================================================        
+
+
 
 #esraa
 def home_page(request):
