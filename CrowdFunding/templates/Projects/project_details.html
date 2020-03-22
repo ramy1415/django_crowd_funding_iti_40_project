@@ -105,11 +105,12 @@
             success: function (response) {
                 oldvalue = document.querySelectorAll(".progress-bar-success")[0].getAttribute('aria-valuenow');
                 if (i==1){
-                newvalue= parseInt(oldvalue*100)+ donation;}
+                newvalue= parseInt(oldvalue)+ donation;}
                 else{
                 newvalue+=donation;}
                 document.querySelector(".progress-bar-success").setAttribute("aria-valuenow",`${newvalue}`);
                 document.querySelector(".progress-bar-success").innerText=`${newvalue} % Complete succes`;
+                $(".progress-bar-success").css("width",`${newvalue}%`)
 
                 console.log("response");
             },
@@ -265,8 +266,8 @@
           <div >
             <div><h3 class="fa">Donation:</h3></div>
               <div class="progress">
-                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{donationbar}}"
-                  aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow=" {% widthratio donationbar 1 100 %}"
+                  aria-valuemin="0" aria-valuemax="100" style="width:{% widthratio donationbar 1 100 %}%">
                   {% widthratio donationbar 1 100 %}% Complete (success)
                 </div>
               </div>

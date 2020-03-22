@@ -40,7 +40,7 @@ def add_project(request):
                     img.project_id = project
                     img.save()
 
-            return HttpResponseRedirect('/addproject?submitted=True')
+            return HttpResponseRedirect('/projects')
 
     else:
         form = AddProject()
