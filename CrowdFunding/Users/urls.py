@@ -7,6 +7,7 @@ app_name = 'Users'
 urlpatterns=[
     path('register/',views.users_register,name='register'),
     path('login/',views.users_login,name='login'),
+    path('logout/', views.users_logout, name='logout'),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         views.activate, name='activate'),
     # path('profile/',views.user_profile,name='profile'),
