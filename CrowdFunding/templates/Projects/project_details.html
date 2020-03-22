@@ -45,6 +45,7 @@
   </style>
   <script>
   const starsTotal = 5;
+  i=0;
   function updateRate(rate){
     $.ajax({
     type: 'POST',
@@ -89,6 +90,36 @@
         })
     }
 
+    function donate(){
+       i++;
+       let donation = parseInt(document.querySelector("#donationinput").value);
+        if(!donation){
+            alert("enter value")
+        }
+        $.ajax({
+            type:'GET',
+            url:"/projectdonation/",
+            data:{"donation":donation,
+            "id":{{project.id}},
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
+            success: function (response) {
+                oldvalue = document.querySelectorAll(".progress-bar-success")[0].getAttribute('aria-valuenow');
+                if (i==1){
+                newvalue= parseInt(oldvalue*100)+ donation;}
+                else{
+                newvalue+=donation;}
+                document.querySelector(".progress-bar-success").setAttribute("aria-valuenow",`${newvalue}`);
+                document.querySelector(".progress-bar-success").innerText=`${newvalue} % Complete succes`;
+
+                console.log("response");
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                alert(response);
+            }
+
+        })
+    }
 
     // Run getRatings when DOM loads
     document.addEventListener('DOMContentLoaded', function(){
@@ -163,9 +194,12 @@
         </p>
 
         <hr>
-
+        <div  style="display:flex;justify-content: space-between;">
         <!-- Date/Time -->
-          <p>{{project.start_time}}</p>
+          <h4 >{{project.start_time}}</h4>
+          <!-- Edit icon-->
+          <a  href="/editproject/{{project.id}}" class=" button btn btn-info"><i class="fas fa-edit"></i></a>
+        </div>
 
         <hr>
 
@@ -210,11 +244,12 @@
             <span class="carousel-control-next-icon"></span>
           </a>
         </div>
+          <!-- image add and delete controls -->
+          {%if user == project.user_id%}
             <div style="display:inline-block">
                 <li class=" fas fa-trash btn btn-danger " style="margin-top:7px" onclick="deleteImg()"> </li>
             </div>
-          <!-- image add and delete controls -->
-          {%if user%}
+
            <div style="display:inline-block">
                <form action="/addimage/" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -234,6 +269,39 @@
                 </div>
               </div>
           </div>
+        <!-- Donation input-->
+          <!-- Button trigger modal -->
+                <button style="margin-top:10px;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                  Donate
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Support my work</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                            <table>
+                               <tr>
+                                   <td> <label for="donationinput" >Donation</label> </td>
+                                   <td> <input id="donationinput"  type="number" min="1"/> </td>
+                               </tr>
+                           </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="don" class="btn btn-primary" onclick="donate()" data-dismiss="modal"> Donate </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
 
         <div>
             <p>Ends at :{{project.end_time}}</p>
@@ -291,7 +359,7 @@
                 <div id="stars-outer">
                     <div id="stars-inner"></div>
                 </div>
-                    <span class="number-rating"></span>
+                <span class="number-rating"></span>
             </div>
           </div>
         </div>
@@ -322,7 +390,7 @@
       </div>
     </div>
     </div>
-    
+
 {% endblock %}
 
 

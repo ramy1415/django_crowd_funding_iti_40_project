@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Project, Category, Tag, Picture
+from .models import Project, Category, Tag, Picture,Donation
 from Users.models import User
 import datetime
 
@@ -27,12 +27,7 @@ class EditProject(ModelForm):
         }
 
 
-# class ImageForm(forms.ModelForm):
-#     Pictures = forms.ImageField(label='Pictures')
-#
+# class DonationForm(ModelForm):
 #     class Meta:
-#         model = Picture
-#         fields = ('pic_path',)
-#         widgets = {
-#             'pic_path': forms.ClearableFileInput(attrs={'multiple': True})
-#         }
+#         model = Donation
+#         fields = (amount,)
