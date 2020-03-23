@@ -17,11 +17,6 @@
         {% if registered %}
         <h1>Please Visit Your E-mail To Activate Your Account!</h1>
         <hr>
-
-        <h2>or you can</h2>
-        <label for="login">
-            <a class="nav-link" href="{% url 'Users:login' %}">Login Directly</a>
-        </label>
         {% else %}
         <div class="form-content container">
             <form enctype="multipart/form-data" method="POST">
