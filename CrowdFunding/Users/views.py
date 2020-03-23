@@ -90,7 +90,7 @@ def users_login(request):
         if user is not None:
             if user.is_active:
                 login(request,user)
-                return HttpResponseRedirect('/profile/')
+                return HttpResponseRedirect('/')
             else:
                 return HttpResponse("Your account was inactive.")
         else:
@@ -117,7 +117,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        return render(request, 'Users/register_confirm.html')
     else:
         return HttpResponse('Activation link is invalid!')
   
