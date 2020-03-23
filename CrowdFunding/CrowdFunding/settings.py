@@ -26,7 +26,8 @@ SECRET_KEY = 'dman0#28cnq*sc%!jhm%s*%zr$l#5pd9&59k_%0894*d@o2e8u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+]
 
 
 # Application definition
