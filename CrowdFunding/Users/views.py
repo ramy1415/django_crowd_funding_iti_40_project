@@ -103,6 +103,7 @@ def users_login(request):
  # you can find confirmation link in the console
 # to confirm , copy the link and paste it to your browser , you will be approved and can login to the website :)
 # confirm link will be some thing like this :  http://127.0.0.1:8000/activate/MTM/5f1-0hshsbhabsch42bf9b6/
+# when you confirm , you will see a meassage like this :Thank you for your email confirmation. Now you can login your account.
 # beacuse problems in stmp server with dovelopment apps , no email sent , so we can use console and local server instead with dev apps
 # thank you >>> anis :)
 def activate(request, uidb64, token):
