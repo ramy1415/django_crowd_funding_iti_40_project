@@ -42,8 +42,6 @@ def users_register(request):
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
             user.set_password(user.password)
-            #it should be false but for easy testing login after register 
-            # i set it true to skip activation and login easly.
             user.is_active = True
             user.save()
 
