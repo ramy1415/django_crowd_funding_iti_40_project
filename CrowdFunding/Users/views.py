@@ -86,16 +86,7 @@ def users_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        # try:
-        #     me = User.objects.get(username=request.POST['username'])
-        #     if me.password == request.POST['password']:
-        #         request.session['username'] = me.id
-        #         return HttpResponseRedirect('/you-are-logged-in/')
-        # except User.DoesNotExist:
-        #      return HttpResponse("Your username and password didn't match.")
-        # to login with both email and password , i set email=username in the query
-        # user = authenticate(username=User.objects.get(email=username), password=password)
-        user = authenticate(username=username ,password=password)
+        user = authenticate(username=User.objects.get(email=username) ,password=password)
         print(user)
         if user is not None:
             if user.is_active:
