@@ -251,8 +251,7 @@ def all_projects(request):
     all_rates = Rate.objects.all()
     all_reports = ReportProject.objects.all()
     try:
-        user_pic_url = Profile.objects.get(
-            user=request.user).profile_pic.url  # getting the user pic who created this project
+        user_pic_url = Profile.objects.get(user=request.user).profile_pic.url  # getting the user pic who created this project
     except Profile.DoesNotExist as identifier:
         user_pic_url = "/static/images/profiles/default_profile.png"
 

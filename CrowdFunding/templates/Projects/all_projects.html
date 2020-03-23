@@ -181,7 +181,11 @@
                         <span class="number-rating">{{project.rate}}</span>
                     </div>
                 <div class="card-body text-center ">
+                    {% if project.user_id.profile.profile_pic.url %}
                     <img width="70px" height="70px" class="rounded-circle border  border-primary" src="{{ project.user_id.profile.profile_pic.url }}" alt="">
+                    {% else %}
+                    <img width="70px" height="70px" class="rounded-circle border  border-primary" src="/static/images/profiles/default_profile.png" alt="">
+                    {% endif %}
                     <h5 class="card-title  text-danger">{{project.title}}</h5>
                     <p class="card-text">{{project.details}}</p>
                     <div class="progress">
