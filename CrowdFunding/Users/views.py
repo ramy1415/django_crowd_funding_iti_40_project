@@ -24,7 +24,7 @@ from django.db.models import Sum
 #-----------------------------------------------------------------------
 
 def index(request):
-    return render(request,'Users/index.html') #welcome user to website
+    return render(request,'Users/index.html') 
 #------------------------------------------------------------------------
 @login_required
 def special(request):
@@ -42,7 +42,8 @@ def users_register(request):
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
             user.set_password(user.password)
-            user.is_active = True
+            # set to false to prevent users from login without confirming email
+            user.is_active = False
             user.save()
 
 
@@ -98,8 +99,12 @@ def users_login(request):
             return HttpResponseRedirect('/register/')
     else:
         return render(request, 'Users/login.html', {})
-#-------------------------------------------------------------------------------
-
+#--------------------------------- activation with confirmation link----------------------------------------------
+ # you can find confirmation link in the console
+# to confirm , copy the link and paste it to your browser , you will be approved and can login to the website :)
+# confirm link will be some thing like this :  http://127.0.0.1:8000/activate/MTM/5f1-0hshsbhabsch42bf9b6/
+# beacuse problems in stmp server with dovelopment apps , no email sent , so we can use console and local server instead with dev apps
+# thank you >>> anis :)
 def activate(request, uidb64, token):
     try:
         #uid = force_text(urlsafe_base64_decode(uidb64))
@@ -114,7 +119,7 @@ def activate(request, uidb64, token):
         return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
     else:
         return HttpResponse('Activation link is invalid!')
-
+  
 #--------------------------------------------------------------------------------------
 @login_required()
 def user_profile(request):
@@ -173,7 +178,6 @@ def delete_account(request):
     else :
         return render(request, 'Users/confirm_delete.html')
 #--------------------------------------------------------------------------------
-
 def users_logout(request):
     request.session.flush()
     return render(request, 'Users/login.html')
