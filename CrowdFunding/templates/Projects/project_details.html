@@ -148,13 +148,13 @@
          $.ajax({
             type:'GET',
             url:"/deleteimg/",
-            data:{"img":$(".active")[1].id,
+            data:{"img":document.getElementsByClassName("carousel-item active")[0].id,
             "id":{{project.id}},
             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
             success: function (response) {
             if($(".active")[1].children)
-               { $($(".active")[1].children).attr("src","{% static 'images/projects/no-image-icon.png' %}");
-                $($(".active")[1].children).css("height", "500px")}},
+               { $(document.getElementsByClassName("carousel-item active")[0]).children("img").attr("src","{% static 'images/projects/no-image-icon.png' %}");
+                $(document.getElementsByClassName("carousel-item active")[0]).children("img").css("height", "500px")}},
              error: function (response) {
                 // alert the error if any error occured
                 alert(response);
