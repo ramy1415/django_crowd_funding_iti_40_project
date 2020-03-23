@@ -91,7 +91,7 @@
     }
 
     function donate(){
-       i++;
+
        let donation = parseInt(document.querySelector("#donationinput").value);
         if(!donation){
             alert("enter value")
@@ -104,10 +104,9 @@
             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()},
             success: function (response) {
                 oldvalue = document.querySelectorAll(".progress-bar-success")[0].getAttribute('aria-valuenow');
-                if (i==1){
-                newvalue= parseInt(parseInt(oldvalue)+ parseInt(donation)/{{donationbar}});}
-                else{
-                newvalue = parseInt(newvalue +donation/{{donationbar}});}
+
+                newvalue= Math.floor(parseInt(oldvalue)+ (parseInt(donation)/{{project.total_target}}*100));
+
                 document.querySelector(".progress-bar-success").setAttribute("aria-valuenow",`${newvalue}`);
                 document.querySelector(".progress-bar-success").innerText=`${newvalue} % Complete succes`;
                 $(".progress-bar-success").css("width",`${newvalue}%`)
