@@ -25,7 +25,7 @@ def add_project(request):
             project.current_money = cd['CurrentMoney']
             project.total_target = cd['TotalTarget']
             project.end_time = cd['EndTime']
-            project.user_id = cd['UserId']
+            project.user_id = request.user
             project.save()
             for tag in cd['Tags']:
                 project.tags.add(tag)

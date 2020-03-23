@@ -105,9 +105,9 @@
             success: function (response) {
                 oldvalue = document.querySelectorAll(".progress-bar-success")[0].getAttribute('aria-valuenow');
                 if (i==1){
-                newvalue= parseInt(oldvalue)+ donation;}
+                newvalue= parseInt(parseInt(oldvalue)+ parseInt(donation)/{{donationbar}});}
                 else{
-                newvalue+=donation;}
+                newvalue = parseInt(newvalue +donation/{{donationbar}});}
                 document.querySelector(".progress-bar-success").setAttribute("aria-valuenow",`${newvalue}`);
                 document.querySelector(".progress-bar-success").innerText=`${newvalue} % Complete succes`;
                 $(".progress-bar-success").css("width",`${newvalue}%`)

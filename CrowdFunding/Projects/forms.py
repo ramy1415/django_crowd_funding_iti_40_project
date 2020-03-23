@@ -15,7 +15,7 @@ class AddProject(forms.Form):
     EndTime = forms.DateField(widget=forms.SelectDateWidget(years=range(2020, datetime.date.today().year + 20)),
                               label='End Time')
     Pictures = forms.ImageField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
-    UserId = forms.ModelChoiceField(queryset=User.objects.all(), )
+
 
 
 class EditProject(ModelForm):
