@@ -144,7 +144,7 @@ def user_profile(request):
     }
     return render(request,'Users/profile.html',context)
 
-
+@login_required()
 def my_donations(request):
     user = request.user
     donations = Donation.objects.values('project_id')\
@@ -163,7 +163,7 @@ def my_donations(request):
     }
     return render(request, 'Users/my_donations.html', context)
 
-
+@login_required()
 def my_projects(request):
     user = request.user
     projects = Project.objects.filter(user_id=user)
@@ -171,7 +171,7 @@ def my_projects(request):
         'projects' : projects
     }
     return render(request, 'Users/my_projects.html',context)
-
+@login_required()
 def delete_account(request):
     user = request.user.id
     if request.method == 'POST':
