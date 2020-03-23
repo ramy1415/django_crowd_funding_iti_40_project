@@ -3,7 +3,7 @@ from django.shortcuts import render
 from .models import Category, Comment, Donation, Project, Picture, Rate, Tag, FeaturedProject, ReportProject
 from Users.models import User
 from .forms import AddProject, EditProject
-from django.http import JsonResponse, HttpResponseRedirect, HttpResponseServerError
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponseServerError, HttpResponse
 from Users.models import Profile
 from django.utils import timezone
 from django.db.models import Max
@@ -70,49 +70,54 @@ def edit_project(request, _id):
 
 @login_required
 def project_details(request, _id):
-    project = Project.objects.get(id=_id)
-    print(project)
-    pictures = Picture.objects.filter(project_id=_id)
-    print(pictures)
-    comments = Comment.objects.filter(project_id=_id).values('user_id', 'comment_body')
-    commentsdict = []
-
-    for comment in comments:
-        print(comment)
-        commentuserimags = Profile.objects.filter(user=comment['user_id']).values('profile_pic')
-        if commentuserimags:
-            commentuserimg = commentuserimags[0]
-        else:
-            commentuserimg = 0
-        commentsdict.append(tuple([User.objects.get(id=comment['user_id']), commentuserimg, comment['comment_body']]))
-    tags = project.tags.all()
-    print("alaa", commentsdict)
-    print(tags)
-    donation = project.current_money / project.total_target
-    picnum = []
-
     try:
+        project = Project.objects.get(id=_id)
+        print(project)
+        pictures = Picture.objects.filter(project_id=_id)
+        print(pictures)
+        comments = Comment.objects.filter(project_id=_id).values('user_id', 'comment_body')
+        commentsdict = []
 
-        rate = Rate.objects.get(project_id=_id, user_id=request.user)
-        ratenum = int(str(rate).split(":", 4)[3])
-    except:
-        ratenum = 0
+        for comment in comments:
+            print(comment)
+            commentuserimags = Profile.objects.filter(user=comment['user_id']).values('profile_pic')
+            if commentuserimags:
+                commentuserimg = commentuserimags[0]
+            else:
+                commentuserimg = 0
+            commentsdict.append(tuple([User.objects.get(id=comment['user_id']), commentuserimg, comment['comment_body']]))
+        tags = project.tags.all()
+        print("alaa", commentsdict)
+        print(tags)
+        donation = project.current_money / project.total_target
+        picnum = []
+        for i in range(len(pictures)):
+            picnum.append(i)
+        try:
 
-    print(ratenum)
-    for i in range(len(pictures)):
-        picnum.append(i)
-    context = {
-        'project': project,
-        'pictures': pictures,
-        'picnum': picnum,
-        'donationbar': donation,
-        'comments': commentsdict,
-        'tags': tags,
-        'rate': ratenum,
-        # must be get from session
-        "user": request.user,
-    }
-    return render(request, 'Projects/project_details.html', context)
+            rate = Rate.objects.get(project_id=_id, user_id=request.user)
+            ratenum = int(str(rate).split(":", 4)[3])
+        except:
+            ratenum = 0
+
+        print(ratenum)
+
+        context = {
+            'project': project,
+            'pictures': pictures,
+            'picnum': picnum,
+            'donationbar': donation,
+            'comments': commentsdict,
+            'tags': tags,
+            'rate': ratenum,
+            # must be get from session
+            "user": request.user,
+        }
+        return render(request, 'Projects/project_details.html', context)
+
+    except Project.DoesNotExist:
+        return HttpResponseServerError()
+
 
 @login_required
 def project_comment(request):
@@ -172,9 +177,9 @@ def add_image(request):
 
                 print(project)
     if img:
-        return HttpResponseRedirect("/projects")
+        return HttpResponseRedirect("/projects/"+str(request.POST['project']))
     else:
-        return HttpResponseServerError
+        return HttpResponseServerError()
 
 
 @login_required
@@ -207,6 +212,14 @@ def add_donation(request):
             else:
                 return JsonResponse({"error": "error"})
 
+
+@login_required(login_url='/login')
+def cancel_project(request,_id):
+    result = Project.objects.get(id=_id).delete()
+    if result:
+        return HttpResponseRedirect('/projects')
+    else:
+        return HttpResponseServerError()
 
 # ========================================================================ramy's tasks==================================================================
 # ramy

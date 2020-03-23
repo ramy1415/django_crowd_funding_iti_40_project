@@ -3,7 +3,7 @@
 {%csrf_token%}
 {% load static %}
 
-  <style>
+<style>
   .carousel-inner{
       width:100%;
       height:50%;
@@ -42,8 +42,8 @@
   color: #f8ce0b;
 }
 
-  </style>
-  <script>
+</style>
+<script>
   const starsTotal = 5;
   i=0;
   function updateRate(rate){
@@ -191,7 +191,7 @@
         <!-- Author -->
         <p class="lead">
           by
-          <a href="#">{{project.user_id}}</a>
+          <i>{{project.user_id}}</i>
         </p>
 
         <hr>
@@ -200,8 +200,14 @@
           <h4 >{{project.start_time}}</h4>
           <!-- Edit icon-->
             {%if user == project.user_id%}
-          <a  href="/editproject/{{project.id}}" class=" button btn btn-info"><i class="fas fa-edit"></i></a>
+                <div>
+                <a  href="/editproject/{{project.id}}" class=" button btn btn-info"><i class="fas fa-edit"></i></a>
+                {% if donationbar <= 0.20 %}
+                    <a href="/cancelproject/{{project.id}}" class="button btn btn-danger"><i class="fas fa-window-close"></i></a>
+                {% endif %}
+                </div>
             {% endif %}
+
         </div>
 
         <hr>
@@ -210,8 +216,7 @@
        <div id="demo" class="carousel slide" data-ride="carousel">
 
   <!-- Indicators -->
-        <ul class="carousel-indicators">
-
+      <ul class="carousel-indicators">
         {% for i in picnum%}
         {%if not i %}
         <li data-target="#demo" data-slide-to="{{i}}" class="active"></li>
@@ -219,7 +224,6 @@
         <li data-target="#demo" data-slide-to="{{i}}" ></li>
         {% endif %}
         {% endfor %}
-
       </ul>
 
   <!-- The slideshow -->
@@ -303,19 +307,14 @@
                     </div>
                   </div>
                 </div>
-
-
-
+        <!-- End Date -->
         <div>
             <p>Ends at :{{project.end_time}}</p>
         </div>
 
         <hr>
-
         <!-- Post Content -->
         <p class="lead">{{project.details}}</p>
-
-
         <hr>
 
         <!-- Comments Form -->
@@ -347,14 +346,10 @@
         </div>
         {% endfor %}
         </fragment>
-        <!-- Comment with nested comments -->
-
-
 
 </div>
       <!-- Sidebar Widgets Column -->
       <div class="col-md-4">
-
         <!-- Rate Widget -->
         <div class="card my-4">
           <h5 class="card-header">Rate</h5>
@@ -380,7 +375,7 @@
               <div class="col-lg-6">
                 <ul class="list-unstyled mb-0">
                   <li>
-                    <a href="#">{{tag}}</a>
+                    <p>{{tag}}</p>
                   </li>
                 </ul>
               </div>
@@ -399,9 +394,4 @@
     </div>
 
 {% endblock %}
-
-
-
-
-
 
