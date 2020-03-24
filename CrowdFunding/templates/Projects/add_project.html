@@ -5,6 +5,7 @@
     $("input").addClass("form-control");
     $("#id_Pictures").removeClass("form-control");});
 </script>
+{% include 'partials/nav_bar.html' %}
 {% load static %}
 {% if submitted %}
     <p> your project added successfully</p>
@@ -15,7 +16,7 @@
             {% csrf_token %}
         <table>
 
-            {{ form.as_table }}
+            {{ form  }}
 
            <tr>
                <td>&nbsp;</td>

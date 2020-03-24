@@ -201,9 +201,9 @@
           <!-- Edit icon-->
             {%if user == project.user_id%}
                 <div>
-                <a  href="/editproject/{{project.id}}" class=" button btn btn-info"><i class="fas fa-edit"></i></a>
+                <a  href="/editproject/{{project.id}}" class=" button btn btn-info"><i class="fas fa-edit"> Edit Project</i></a>
                 {% if donationbar <= 0.20 %}
-                    <a href="/cancelproject/{{project.id}}" class="button btn btn-danger"><i class="fas fa-window-close"></i></a>
+                    <a href="/cancelproject/{{project.id}}" class="button btn btn-danger"><i class="fas fa-window-close"> Cancel Project</i></a>
                 {% endif %}
                 </div>
             {% endif %}
@@ -232,7 +232,6 @@
               {% if forloop.first %}
                 <div class="carousel-item active" id="{{picture}}">
                    <img class="fas fa-trash" src="{% static '' %}{{picture}}"  width="1100" height="500" >
-
                 </div>
               {% else %}
                 <div class="carousel-item " id="{{picture}}">
@@ -254,14 +253,14 @@
           <!-- image add and delete controls -->
           {%if user == project.user_id%}
             <div style="display:inline-block">
-                <li class=" fas fa-trash btn btn-danger " style="margin-top:7px" onclick="deleteImg()"> </li>
+                <li class=" fas fa-trash btn btn-danger " style="margin-top:7px" onclick="deleteImg()"> Delete Image </li>
             </div>
 
            <div style="display:inline-block">
                <form action="/addimage/" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                 <input type="hidden" name="project" value="{{project.id}}">
-                <label for="files" class="btn"><i style="margin-top:15px " class=" btn btn-info far fa-image" ></i></label>
+                <label for="files" class="btn"><i style="margin-top:15px " class=" btn btn-info far fa-image" > Edit Image </i></label>
                 <input id="files" style="visibility:hidden;" type="file" onchange="this.form.submit()" name="images" multiple/>
                </form>
             </div>
@@ -314,7 +313,7 @@
 
         <hr>
         <!-- Post Content -->
-        <p class="lead">{{project.details}}</p>
+        <p class="bg-light"> Description : {{project.details}}</p>
         <hr>
 
         <!-- Comments Form -->
