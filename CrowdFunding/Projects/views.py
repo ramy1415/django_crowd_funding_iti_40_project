@@ -235,6 +235,10 @@ def add_project_report(request):  # ajax report
             if report.id:  # if the report was added send back to user the message
                 return JsonResponse({"message": "Thanks for letting us know"})
 
+@login_required(login_url='/login')
+def cancel_project_ajax(request,_id):
+    if Project.objects.get(id=_id).delete():
+        return JsonResponse({})
 
 # ramy
 @login_required(login_url='/login')
@@ -305,6 +309,13 @@ def all_projects(request):
         except ZeroDivisionError as identifier:
             i.rate_percentage = 0
             i.rate = 0
+
+        if request.user == i.user_id and i.progress<25 :   #check if the project is cancelable
+            i.can_cancel=True
+
+        if request.user == i.user_id :   #check if it is the owner
+            i.is_owner=True
+            
 
     return render(request, 'Projects/all_projects.html', {'all_projects': all_projects, 'user_pic_url': user_pic_url})
 

@@ -20,5 +20,6 @@ urlpatterns = [
     path('addreport', views.add_project_report, name='addreport'),
     path('delreport', views.del_project_report, name='delreport'),
     path('projectdonation/',views.add_donation,name='add_donation'),
-    path('cancelproject/<int:_id>', views.cancel_project,name='cancel_project')
+    path('cancelproject/<int:_id>', views.cancel_project,name='cancel_project'),
+    path('cancelprojectajax/<int:_id>', views.cancel_project_ajax,name='cancel_project_ajax')
 ]
