@@ -337,9 +337,9 @@ def home_page(request):
     latest = Project.objects.values('id').order_by('-start_time')[:5]
     for pro in latest:
         latest_projects.append(Picture.objects.filter(project_id=pro['id'])[:1])
-    featured = FeaturedProject.objects.values('id')[:5]
+    featured = FeaturedProject.objects.all()
     for pro in featured:
-        featured_projects.append(Picture.objects.filter(project_id=pro['id']))
+        featured_projects.append(Picture.objects.filter(project_id=pro.project_id.id))
     categories = Category.objects.all()
     return render(request, "Projects/home_page.html", {'top_rated': projects,
                                                        'latest_projects': latest_projects,
