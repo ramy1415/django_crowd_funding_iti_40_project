@@ -21,7 +21,7 @@ class AddProject(forms.Form):
 class EditProject(ModelForm):
     class Meta:
         model = Project
-        exclude = ('start_time', 'user_id',)
+        exclude = ('start_time', 'user_id','tags')
         widgets = {
             'end_time': forms.SelectDateWidget(years=range(2020, datetime.date.today().year + 20)),
         }

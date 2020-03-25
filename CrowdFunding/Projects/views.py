@@ -30,10 +30,14 @@ def add_project(request):
 
             tages = cd['Tags'].split(" ")
             for tag in tages:
-                tagobj = Tag()
-                tagobj.tag_name=tag
-                tagobj.save()
-                project.tags.add(tagobj)
+                obj, created = Tag.objects.get_or_create(
+                    tag_name=tag,
+                    defaults={'tag_name': tag},
+                )
+                if obj:
+                    project.tags.add(obj)
+                elif created:
+                    project.tags.add(created)
 
             for file in request.FILES.keys():
                 image_file = request.FILES.getlist(file)
@@ -63,15 +67,29 @@ def edit_project(request, _id):
         project = Project.objects.get(id=_id)
         edit_form = EditProject(request.POST, instance=project)
         edit_form.save()
+        tages = request.POST['tags'].split(" ")
+        for tag in tages:
+            obj, created = Tag.objects.get_or_create(
+                tag_name=tag,
+                defaults={'tag_name': tag},
+            )
+            if obj:
+                project.tags.add(obj)
+            elif created:
+                project.tags.add(created)
 
         return HttpResponseRedirect('/projects/' + str(_id))
     else:
         if 'submitted' in request.GET:
             submitted = True
         project = Project.objects.get(id=_id)
+        oldtags=Tag.objects.filter(project=project)
+        oldtagsstr=' '.join([str(i) for i in oldtags])
+        oldtags.delete()
         edit_form = EditProject(instance=project)
 
-    return render(request, 'Projects/edit_project.html', {'edit_form': edit_form, 'submitted': submitted})
+    return render(request, 'Projects/edit_project.html', {'edit_form': edit_form, 'oldtags':oldtagsstr, 'submitted': submitted})
+
 
 @login_required
 def project_details(request, _id):
@@ -90,7 +108,8 @@ def project_details(request, _id):
                 commentuserimg = commentuserimags[0]
             else:
                 commentuserimg = 0
-            commentsdict.append(tuple([User.objects.get(id=comment['user_id']), commentuserimg, comment['comment_body']]))
+            commentsdict.append(
+                tuple([User.objects.get(id=comment['user_id']), commentuserimg, comment['comment_body']]))
         tags = project.tags.all()
         print("alaa", commentsdict)
         print(tags)
@@ -180,7 +199,7 @@ def add_image(request):
 
                 print(project)
     if img:
-        return HttpResponseRedirect("/projects/"+str(request.POST['project']))
+        return HttpResponseRedirect("/projects/" + str(request.POST['project']))
     else:
         return HttpResponseServerError()
 
@@ -217,12 +236,13 @@ def add_donation(request):
 
 
 @login_required(login_url='/login')
-def cancel_project(request,_id):
+def cancel_project(request, _id):
     result = Project.objects.get(id=_id).delete()
     if result:
         return HttpResponseRedirect('/projects')
     else:
         return HttpResponseServerError()
+
 
 # ========================================================================ramy's tasks==================================================================
 # ramy
@@ -238,10 +258,12 @@ def add_project_report(request):  # ajax report
             if report.id:  # if the report was added send back to user the message
                 return JsonResponse({"message": "Thanks for letting us know"})
 
+
 @login_required(login_url='/login')
-def cancel_project_ajax(request,_id):
+def cancel_project_ajax(request, _id):
     if Project.objects.get(id=_id).delete():
         return JsonResponse({})
+
 
 # ramy
 @login_required(login_url='/login')
@@ -271,7 +293,8 @@ def all_projects(request):
     all_rates = Rate.objects.all()
     all_reports = ReportProject.objects.all()
     try:
-        user_pic_url = Profile.objects.get(user=request.user).profile_pic.url  # getting the user pic who created this project
+        user_pic_url = Profile.objects.get(
+            user=request.user).profile_pic.url  # getting the user pic who created this project
     except Profile.DoesNotExist as identifier:
         user_pic_url = "/static/images/profiles/default_profile.png"
 
@@ -313,12 +336,11 @@ def all_projects(request):
             i.rate_percentage = 0
             i.rate = 0
 
-        if request.user == i.user_id and i.progress<25 :   #check if the project is cancelable
-            i.can_cancel=True
+        if request.user == i.user_id and i.progress < 25:  # check if the project is cancelable
+            i.can_cancel = True
 
-        if request.user == i.user_id :   #check if it is the owner
-            i.is_owner=True
-            
+        if request.user == i.user_id:  # check if it is the owner
+            i.is_owner = True
 
     return render(request, 'Projects/all_projects.html', {'all_projects': all_projects, 'user_pic_url': user_pic_url})
 

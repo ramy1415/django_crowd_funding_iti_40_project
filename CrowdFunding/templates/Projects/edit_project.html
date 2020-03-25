@@ -12,6 +12,12 @@
             {% csrf_token %}
         <table>
             {{ edit_form.as_table }}
+            <tr>
+                <td>Tags</td>
+
+                <td><input type="text" name="tags" value="{{oldtags}}"/></td>
+
+            </tr>
            <tr>
                 <td>&nbsp;</td>
                <td><input class="btn btn-primary"  type="submit" value="Submit"></td>
