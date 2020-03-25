@@ -113,7 +113,10 @@
                 $(`#${comment_id}-comment-reports-count`).html(`</span><i class="fas fa-flag"></i><span> ${parseInt(reports)-1}`)
                     
                 alert(result.message)
-            }
+            },
+            error:function(error){
+                alert("Couldn't remove your report ..")
+                }
         })
                 
         }
