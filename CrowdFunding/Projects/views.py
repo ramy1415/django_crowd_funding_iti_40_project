@@ -110,7 +110,6 @@ def project_details(request, _id):
             'comments': commentsdict,
             'tags': tags,
             'rate': ratenum,
-            # must be get from session
             "user": request.user,
         }
         return render(request, 'Projects/project_details.html', context)
@@ -163,7 +162,6 @@ def delete_image(request):
 @login_required
 def add_image(request):
     if request.method == 'POST':
-        # print("imffileeee", image_file)
         if request.FILES.getlist('images'):
             image_file = request.FILES.getlist('images')
             for i in image_file:
