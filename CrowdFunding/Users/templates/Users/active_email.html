@@ -1,1 +1,7 @@
-{% autoescape off %} Hi {{ user.username }}, Please visit your email to comfirm registration, http://{{ domain }}{% url 'Users:activate' uidb64=uid token=token %} {% endautoescape %}
+{% autoescape off %}
+Hi {{ user.username }},
+Please use the confirmation link to active your account 
+http://{{ domain }}{% url 'Users:activate' uidb64=uid token=token %} 
+Regards,
+Django Project Team :D
+{% endautoescape %}

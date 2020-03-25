@@ -125,7 +125,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -134,3 +134,9 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'files')
 MEDIA_URL = '/files/'
 LOGIN_URL = '/login'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'django.project.iti@gmail.com'
+EMAIL_HOST_PASSWORD = 'django@iti40'
+EMAIL_PORT = 587

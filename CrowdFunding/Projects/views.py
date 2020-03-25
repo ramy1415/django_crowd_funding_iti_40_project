@@ -27,8 +27,13 @@ def add_project(request):
             project.end_time = cd['EndTime']
             project.user_id = request.user
             project.save()
-            for tag in cd['Tags']:
-                project.tags.add(tag)
+
+            tages = cd['Tags'].split(" ")
+            for tag in tages:
+                tagobj = Tag()
+                tagobj.tag_name=tag
+                tagobj.save()
+                project.tags.add(tagobj)
 
             for file in request.FILES.keys():
                 image_file = request.FILES.getlist(file)
@@ -233,6 +238,10 @@ def add_project_report(request):  # ajax report
             if report.id:  # if the report was added send back to user the message
                 return JsonResponse({"message": "Thanks for letting us know"})
 
+@login_required(login_url='/login')
+def cancel_project_ajax(request,_id):
+    if Project.objects.get(id=_id).delete():
+        return JsonResponse({})
 
 # ramy
 @login_required(login_url='/login')
@@ -304,6 +313,13 @@ def all_projects(request):
             i.rate_percentage = 0
             i.rate = 0
 
+        if request.user == i.user_id and i.progress<25 :   #check if the project is cancelable
+            i.can_cancel=True
+
+        if request.user == i.user_id :   #check if it is the owner
+            i.is_owner=True
+            
+
     return render(request, 'Projects/all_projects.html', {'all_projects': all_projects, 'user_pic_url': user_pic_url})
 
 
@@ -324,9 +340,9 @@ def home_page(request):
     latest = Project.objects.values('id').order_by('-start_time')[:5]
     for pro in latest:
         latest_projects.append(Picture.objects.filter(project_id=pro['id'])[:1])
-    featured = FeaturedProject.objects.values('id')[:5]
+    featured = FeaturedProject.objects.all()
     for pro in featured:
-        featured_projects.append(Picture.objects.filter(project_id=pro['id']))
+        featured_projects.append(Picture.objects.filter(project_id=pro.project_id.id))
     categories = Category.objects.all()
     return render(request, "Projects/home_page.html", {'top_rated': projects,
                                                        'latest_projects': latest_projects,

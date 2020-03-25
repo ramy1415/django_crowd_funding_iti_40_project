@@ -6,18 +6,33 @@
         location.assign(`projects/${project_id}`)
     }
 
+    function cancel_project(e,project_id) {
+        $.ajax({
+            url:`/cancelprojectajax/${project_id}`,
+            method:"GET",
+            data:{},
+            dataType:"json",
+            success:function(result){ 
+                alert("Canceled")
+                $(e.target).parents(".card").remove()
+            },
+            error:function(error){
+                alert("couldn't remove your report")
+                }
+            });
+    
+    }
+
 
     function addComment(event,project_id) {
         event.preventDefault()
-        console.log(project_id)
-        console.log($(`#comment${project_id}`).val())
         $.ajax({
             url:"",
             method:"POST",
             data:{"comment":$(`#comment${project_id}`).val(),"project_id":project_id,csrfmiddlewaretoken:$("input[name='csrfmiddlewaretoken']").val()},
             dataType:"json",
             success:function(result){
-            newComment=$(`<div class="border m-3 border-primary row" style="display: none;">
+            newComment=$(`<div class="border m-3 border-primary pt-2 row" style="display: none;">
                         <div class="col-4">
                             <img width="70px" height="70px" class="rounded-circle" src="{{user_pic_url}}" alt="">
                         <p class="text-success">{{request.user}}</p>
@@ -30,7 +45,7 @@
             $(`#comment${project_id}`).val("")
             $(newComment).show(500)
             },
-            error:function(error){console.log('no')}
+            error:function(error){alert("please enter a comment ..")}
             });
         }
         
@@ -44,12 +59,14 @@
             data:{"project_id":project_id,csrfmiddlewaretoken:$("input[name='csrfmiddlewaretoken']").val(),'body':$(`textarea[name='body${project_id}']`).val()},
             dataType:"json",
             success:function(result){ 
-                $(`#form${project_id}`).html(`<button class="btn btn-danger number-reports" value=${parseInt(reports)+1} onclick="delReport(event , ${ project_id } )" >${parseInt(reports)+1} Total reports .. remove your report ? </button>`)
+                $(`#form${project_id}`).html(`<button class="btn btn-danger number-reports" value=${parseInt(reports)+1} onclick="delReport(event , ${ project_id } )" >That was a mistake remove my report</button>`)
                 alert(result.message)
+
+                $(`#${project_id}-reports-count`).html(`</span><i class="fas fa-flag"></i><span> ${parseInt(reports)+1}`)
 
             },
             error:function(error){
-                console.log('not added')
+                alert("please add a reason ..")
                 }
             });
         }
@@ -63,12 +80,16 @@
             data:{"project_id":project_id,csrfmiddlewaretoken:$("input[name='csrfmiddlewaretoken']").val()},
             dataType:"json",
             success:function(result){ 
-                                $(`#form${project_id}`).html(`<textarea class="form-control" name="body${project_id}" placeholder="Write a comment ..." id="comment-{{project.id}}" rows="3"></textarea>
-                                        <button type="submit" class="btn btn-success number-reports" value="${parseInt(reports)-1}" onclick="addReport(event,${ project_id })" >${parseInt(reports)-1} Total reports .. add a report ?</button>`)
+                $(`#form${project_id}`).html(`<textarea class="form-control" name="body${project_id}" placeholder="Write a comment ..." id="comment-{{project.id}}" rows="3"></textarea>
+                        <button type="submit" class="btn btn-success number-reports" value="${parseInt(reports)-1}" onclick="addReport(event,${ project_id })" >add a report</button>`)
+                
+                $(`#${project_id}-reports-count`).html(`</span><i class="fas fa-flag"></i><span> ${parseInt(reports)-1}`)
+
+                                  
                 alert(result.message)
             },
             error:function(error){
-                console.log('not added')
+                alert("couldn't remove your report")
                 }
             });
         }
@@ -109,15 +130,18 @@
                 <div class="card">
                 <div class="text-right">
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#report-{{project.id}}-Modal">
-                        <i class="fas fa-flag"></i>
+                    {% if project.is_owner %}
+                        <a  href="/editproject/{{project.id}}" class=" button btn btn-info"><i class="fas fa-edit"></i></a>
+                    {% endif %}
+                    <button type="button" id="{{project.id}}-reports-count" class="btn btn-danger" data-toggle="modal" data-target="#report-{{project.id}}-Modal">
+                    </span><i class="fas fa-flag"></i><span> {{project.project_reports}}
                     </button>
                     <!-- Modal -->
                     <div class="modal fade" id="report-{{project.id}}-Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <h3 class="modal-title" id="exampleModalLabel">Reports</h3>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
@@ -126,10 +150,10 @@
                                     <form id='form{{project.id}}'>
                                         {% csrf_token %}
                                         {% if project.is_reported %}
-                                        <button class="btn btn-danger number-reports" value={{project.project_reports}}  onclick="delReport(event , {{ project.id }} )" >{{project.project_reports}} Total reports .. remove your report ?</button>
+                                        <button class="btn btn-danger number-reports" value={{project.project_reports}}  onclick="delReport(event , {{ project.id }} )" >remove My report</button>
                                         {% else %}
                                         <textarea class="form-control" name="body{{project.id}}" placeholder="Write a comment ..." id="comment-{{project.id}}" rows="3"></textarea>
-                                        <button type="submit" class="btn btn-success number-reports" value={{project.project_reports}} onclick="addReport(event,{{project.id}})" >{{project.project_reports}} Total reports .. add a report ?</button>
+                                        <button type="submit" class="btn btn-success number-reports" value={{project.project_reports}} onclick="addReport(event,{{project.id}})" >add a report ?</button>
                                         {% endif %}
                                     </form>
                                 </div>
@@ -195,6 +219,9 @@
                         <small>{{project.remaining}}</small>
                     </div>
                     <button class="btn btn-info rounded m-1" onClick="get_details({{project.id}})" ><span>Details</span></button>
+                    {% if project.can_cancel %}
+                        <button class="btn btn-danger rounded m-1" onClick="cancel_project(event,{{project.id}})" ><span>Cancel Project</span></button>
+                    {% endif %}
                     <a class="btn btn-primary rounded m-1" data-toggle="collapse" href="#collapse{{project.id}}" role="button" aria-expanded="false" aria-controls="collapse{{project.id}}">
                         <span>Comments </span><i class="far fa-comment fa-1x"></i>
                     </a>
