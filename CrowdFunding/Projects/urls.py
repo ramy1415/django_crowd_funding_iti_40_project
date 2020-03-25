@@ -21,5 +21,7 @@ urlpatterns = [
     path('delreport', views.del_project_report, name='delreport'),
     path('projectdonation/',views.add_donation,name='add_donation'),
     path('cancelproject/<int:_id>', views.cancel_project,name='cancel_project'),
-    path('cancelprojectajax/<int:_id>', views.cancel_project_ajax,name='cancel_project_ajax')
+    path('cancelprojectajax/<int:_id>', views.cancel_project_ajax,name='cancel_project_ajax'),
+    path('addcommentreport', views.add_comment_report,name='add_comment_report'),
+    path('delcommentreport', views.del_comment_report,name='del_comment_report')
 ]

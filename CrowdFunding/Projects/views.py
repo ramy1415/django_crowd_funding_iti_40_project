@@ -1,6 +1,6 @@
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render
-from .models import Category, Comment, Donation, Project, Picture, Rate, Tag, FeaturedProject, ReportProject
+from .models import Category, Comment, Donation, Project, Picture, Rate, Tag, FeaturedProject, ReportProject,ReportComment
 from Users.models import User
 from .forms import AddProject, EditProject
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponseServerError, HttpResponse
@@ -222,6 +222,7 @@ def cancel_project(request,_id):
         return HttpResponseServerError()
 
 # ========================================================================ramy's tasks==================================================================
+
 # ramy
 @login_required(login_url='/login')
 def add_project_report(request):  # ajax report
@@ -235,6 +236,7 @@ def add_project_report(request):  # ajax report
             if report.id:  # if the report was added send back to user the message
                 return JsonResponse({"message": "Thanks for letting us know"})
 
+# ramy
 @login_required(login_url='/login')
 def cancel_project_ajax(request,_id):
     if Project.objects.get(id=_id).delete():
@@ -248,6 +250,27 @@ def del_project_report(request):  # ajax remove report
         if delete:  # if the report was deleted send back to user the message
             return JsonResponse({"message": "removed your report"})
 
+# ramy
+@login_required(login_url='/login')
+def del_comment_report(request):  # ajax remove report
+    if request.method == 'POST':
+        delete = ReportComment.objects.get(user_id=request.user, comment_id=request.POST.get('comment_id')).delete()
+        if delete:  # if the report was deleted send back to user the message
+            return JsonResponse({"message": "removed your report"})
+
+# ramy
+@login_required(login_url='/login')
+def add_comment_report(request):  # ajax remove report
+    if request.method == 'POST':
+        if request.POST.get('body') != "":
+            print(request.POST.get('body'))
+            report = ReportComment()
+            report.comment_id = Comment.objects.get(id=request.POST.get('comment_id'))
+            report.user_id = request.user
+            report.report_comment_body = request.POST.get('body')
+            report.save()
+            if report.id:  # if the report was added send back to user the message
+                return JsonResponse({"message": "Thanks for letting us know"})
 
 # ramy
 @login_required(login_url='/login')
@@ -260,21 +283,21 @@ def all_projects(request):
             comment.user_id = request.user
             comment.save()
             if comment.id:
-                return JsonResponse({})
+                return JsonResponse({'comment_id':comment.id})
 
     all_projects = Project.objects.all()
     all_pictures = Picture.objects.all()
     all_comments = Comment.objects.all().order_by('-id')
     all_rates = Rate.objects.all()
     all_reports = ReportProject.objects.all()
+    all_reports_comments = ReportComment.objects.all()
     try:
         user_pic_url = Profile.objects.get(user=request.user).profile_pic.url  # getting the user pic who created this project
     except Profile.DoesNotExist as identifier:
         user_pic_url = "/static/images/profiles/default_profile.png"
 
     for i in all_projects:
-        i.pics = [pic.pic_path.url for pic in
-                  filter(lambda e: e.project_id_id == i.id, all_pictures)]  # getting this project pics
+        i.pics = [pic.pic_path.url for pic in filter(lambda e: e.project_id_id == i.id, all_pictures)]  # getting this project pics
         if len(i.pics) == 0:
             i.pics = ["/static/images/projects/default_project.jpg"]
 
@@ -289,8 +312,7 @@ def all_projects(request):
         project_rates = [project.rate for project in filter(lambda e: e.project_id_id == i.id,
                                                             all_rates)]  # a list of all ratings from all users on that project
 
-        project_reports = [report.user_id for report in filter(lambda e: e.project_id_id == i.id,
-                                                               all_reports)]  # a list of all reports from all users on that project
+        project_reports = [report.user_id for report in filter(lambda e: e.project_id_id == i.id,all_reports)]  # a list of all reports from all users on that project
         i.project_reports = len(project_reports)
 
         if request.user in project_reports:  # checking if this user already reported this project
@@ -298,13 +320,19 @@ def all_projects(request):
         else:
             i.is_reported = False
 
-        i.comments = [{'body': comment.comment_body, 'user': comment.user_id} for comment in
-                      filter(lambda e: e.project_id_id == i.id, all_comments)]
+        i.comments = [{'body': comment.comment_body, 'user': comment.user_id,'id':comment.id} for comment in filter(lambda e: e.project_id_id == i.id, all_comments)]
         # getting the comments on this project and the user who added it
 
+        for comment in i.comments :
+            comment['reports']=[report.user_id for report in filter(lambda e: e.comment_id_id == comment.get('id') , all_reports_comments)]
+            if request.user in comment.get('reports'):  # checking if this user already reported this project
+                comment['is_reported'] = True
+            else:
+                comment['is_reported'] = False
+            comment['comment_reports']=len(comment['reports'])
+        
         try:
-            i.rate_percentage = ((sum(project_rates) / len(
-                project_rates)) / 5) * 100  # getting the overall rating percentage
+            i.rate_percentage = ((sum(project_rates) / len(project_rates)) / 5) * 100  # getting the overall rating percentage
             i.rate = round(((sum(project_rates) / len(project_rates))), 1)  # getting the rating of 5 ex 4.7/5
         except ZeroDivisionError as identifier:
             i.rate_percentage = 0

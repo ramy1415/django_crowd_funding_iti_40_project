@@ -33,6 +33,34 @@
             dataType:"json",
             success:function(result){
             newComment=$(`<div class="border m-3 border-primary pt-2 row" style="display: none;">
+                        <div class="col-12 text-right">
+                            <button type="button" id="${result.comment_id}-comment-reports-count" class="btn btn-danger" data-toggle="modal" data-target="#report-${result.comment_id}-comment-Modal">
+                            </span><i class="fas fa-flag"></i><span> 0
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="report-${result.comment_id}-comment-Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title" id="exampleModalLabel">Reports</h3>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id='form${result.comment_id}-comment'>
+                                                {% csrf_token %}
+                                                <textarea class="form-control" name="body${result.comment_id}-comment" placeholder="Write a comment ..." id="comment-${result.comment_id}-comment" rows="3"></textarea>
+                                                <button type="submit" class="btn btn-success number-reports" value=0 onclick="addCommReport(event,${result.comment_id})" >add a report</button>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-4">
                             <img width="70px" height="70px" class="rounded-circle" src="{{user_pic_url}}" alt="">
                         <p class="text-success">{{request.user}}</p>
@@ -49,6 +77,46 @@
             });
         }
         
+        function addCommReport(event,comment_id){
+            event.preventDefault()
+            reports=$(event.target).val()
+            $.ajax({
+                url:"addcommentreport",
+                method:"POST",
+                data:{"comment_id":comment_id,csrfmiddlewaretoken:$("input[name='csrfmiddlewaretoken']").val(),'body':$(`textarea[name='body${comment_id}-comment']`).val()},
+                dataType:"json",
+                success:function(result){ 
+                    $(`#form${comment_id}-comment`).html(`<button class="btn btn-danger number-reports" value=${parseInt(reports)+1} onclick="delCommReport(event , ${ comment_id } )" >That was a mistake remove my report</button>`)
+                    alert(result.message)
+                    $(`#${comment_id}-comment-reports-count`).html(`</span><i class="fas fa-flag"></i><span> ${parseInt(reports)+1}`)
+                },
+                error:function(error){
+                    alert("please add a reason ..")
+                    }
+                });
+        }
+
+
+        function delCommReport(event,comment_id) {
+        event.preventDefault()
+        reports=$(event.target).val()
+        $.ajax({
+            url:"delcommentreport",
+            method:"POST",
+            data:{"comment_id":comment_id,csrfmiddlewaretoken:$("input[name='csrfmiddlewaretoken']").val()},
+            dataType:"json",
+            success:function(result){ 
+                
+                $(`#form${comment_id}-comment`).html(`<textarea class="form-control" name="body${comment_id}-comment" placeholder="Write a comment ..." rows="3"></textarea>
+                        <button type="submit" class="btn btn-success number-reports" value="${parseInt(reports)-1}" onclick="addCommReport(event,${ comment_id })" >add a report</button>`)
+                
+                $(`#${comment_id}-comment-reports-count`).html(`</span><i class="fas fa-flag"></i><span> ${parseInt(reports)-1}`)
+                    
+                alert(result.message)
+            }
+        })
+                
+        }
 
         function addReport(event,project_id) {
         event.preventDefault()
@@ -153,7 +221,7 @@
                                         <button class="btn btn-danger number-reports" value={{project.project_reports}}  onclick="delReport(event , {{ project.id }} )" >remove My report</button>
                                         {% else %}
                                         <textarea class="form-control" name="body{{project.id}}" placeholder="Write a comment ..." id="comment-{{project.id}}" rows="3"></textarea>
-                                        <button type="submit" class="btn btn-success number-reports" value={{project.project_reports}} onclick="addReport(event,{{project.id}})" >add a report ?</button>
+                                        <button type="submit" class="btn btn-success number-reports" value={{project.project_reports}} onclick="addReport(event,{{project.id}})" >add a report</button>
                                         {% endif %}
                                     </form>
                                 </div>
@@ -239,6 +307,38 @@
                             <div class="tab-pane fade show active" id="pills-Comments-{{project.id}}" role="tabpanel" aria-labelledby="pills-comments-tab">
                                 {% for comment in project.comments %}
                                 <div class="border m-3 border-primary row">
+                                    <div class="col-12 text-right">
+                                        <button type="button" id="{{comment.id}}-comment-reports-count" class="btn btn-danger" data-toggle="modal" data-target="#report-{{comment.id}}-comment-Modal">
+                                        </span><i class="fas fa-flag"></i><span> {{comment.comment_reports}}
+                                        </button>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="report-{{comment.id}}-comment-Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h3 class="modal-title" id="exampleModalLabel">Reports</h3>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form id='form{{comment.id}}-comment'>
+                                                            {% csrf_token %}
+                                                            {% if comment.is_reported %}
+                                                            <button class="btn btn-danger number-reports" value={{comment.comment_reports}}  onclick="delCommReport(event , {{ comment.id }} )" >remove My report</button>
+                                                            {% else %}
+                                                            <textarea class="form-control" name="body{{comment.id}}-comment" placeholder="Write a comment ..." id="comment-{{comment.id}}-comment" rows="3"></textarea>
+                                                            <button type="submit" class="btn btn-success number-reports" value={{comment.comment_reports}} onclick="addCommReport(event,{{comment.id}})" >add a report</button>
+                                                            {% endif %}
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-4">
                                     {% if comment.user.profile.profile_pic.url %}
                                         <img width="70px" height="70px" class="rounded-circle" src="{{comment.user.profile.profile_pic.url}}" alt="">
